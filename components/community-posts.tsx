@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart, MessageCircle, Repeat2, ExternalLink } from "lucide-react"
 import { useState, useEffect } from "react"
-import { openExternalUrl } from "@/lib/farcaster-utils"
+import { openExternalUrl, openCommunityUrl } from "@/lib/farcaster-utils"
 
 interface CommunityPost {
   id: string
@@ -199,7 +199,7 @@ export function CommunityPosts() {
         )}
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" onClick={() => openExternalUrl('https://cura.network/mintedmerch?t=hot')}>
+          <Button size="lg" variant="outline" onClick={() => openCommunityUrl()}>
             View More Posts
             <ExternalLink className="ml-2 h-4 w-4" />
           </Button>

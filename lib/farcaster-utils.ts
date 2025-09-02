@@ -207,3 +207,26 @@ export async function buyToken(): Promise<void> {
   window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')
   console.log('✅ Opened Uniswap via window.open (regular web)')
 }
+
+/**
+ * Opens community URL with smart routing - Mini App goes to Farcaster channel, regular web goes to Cura
+ */
+export async function openCommunityUrl(): Promise<void> {
+  const isMiniApp = await isFarcasterContext()
+  
+  if (isMiniApp) {
+    try {
+      // In Mini App context, open the Farcaster channel
+      const { sdk } = await import('@farcaster/miniapp-sdk')
+      await sdk.actions.openUrl('https://farcaster.xyz/~/channel/mintedmerch')
+      console.log('✅ Opened Farcaster channel via SDK (Mini App)')
+      return
+    } catch (error) {
+      console.warn('❌ Failed to use Farcaster SDK for channel URL, falling back to external:', error)
+    }
+  }
+  
+  // Fallback to Cura network for non-Mini App contexts or if SDK fails
+  window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')
+  console.log('✅ Opened Cura community via window.open (regular web)')
+}

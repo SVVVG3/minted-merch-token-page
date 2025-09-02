@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { openExternalUrl, openShopUrl, buyToken } from "@/lib/farcaster-utils"
+import { openExternalUrl, openShopUrl, buyToken, openCommunityUrl } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
 
 export function HeroSection() {
@@ -56,7 +56,7 @@ export function HeroSection() {
               <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => buyToken()}>
                 <img src="/UniswapLogo.png" alt="Uniswap" className="h-5 w-5" /> Buy $mintedmerch
               </Button>
-              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openExternalUrl('https://cura.network/mintedmerch?t=hot')}>
+              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openCommunityUrl()}>
                 Join Our Community
               </Button>
             </div>

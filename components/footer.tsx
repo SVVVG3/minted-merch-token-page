@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-import { openExternalUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
+import { openExternalUrl, openMiniAppUrl, buyToken, openCommunityUrl } from "@/lib/farcaster-utils"
 
 export function Footer() {
   return (
@@ -25,12 +25,10 @@ export function Footer() {
                   variant="outline"
                   size="xs"
                   className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                  asChild
+                  onClick={() => openCommunityUrl()}
                 >
-                  <a href="https://cura.network/mintedmerch?t=hot" target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-3 w-3 mr-1" />
-                    Join Our Community
-                  </a>
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  Join Our Community
                 </Button>
                 <div className="px-2 py-1 text-xs text-foreground/80">
                   <a 

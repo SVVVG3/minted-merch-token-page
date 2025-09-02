@@ -367,11 +367,9 @@ export function MerchShowcase() {
                       <span className="text-2xl font-bold text-primary">
                         {formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode)}
                       </span>
-                      <Button size="sm" asChild>
-                        <a href={getProductUrl(product.handle)} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Shop Now
-                        </a>
+                      <Button size="sm" onClick={() => openShopUrl()}>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Shop Now
                       </Button>
                     </div>
                   </div>

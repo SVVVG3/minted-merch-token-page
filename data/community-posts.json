@@ -1,0 +1,58 @@
+{
+  "posts": [
+    {
+      "id": "post-1756792938657",
+      "username": "@metamu",
+      "platform": "farcaster",
+      "content": "Good Morning /farcaster 🤘🏿🌹\n\nMad love to @svvvg3.eth x @katkartel.eth for their fun\nmerch based app /mintedmerch 🎒\n\nI already won this $Bankr just for shopping & I won $10 gift card from the homie @suffuze.eth!\n\nIf you feel like winning... 👀🏆\n/mintedmerch 💳",
+      "likes": 12,
+      "comments": 4,
+      "reposts": 4,
+      "timestamp": "2025-09-02T06:02:18.657Z",
+      "url": "https://farcaster.xyz/metamu/0x44a92888651fe46c555734e5d2958210644a2ef4",
+      "featured": true
+    },
+    {
+      "id": "featured-1",
+      "username": "@cryptofashion",
+      "platform": "farcaster",
+      "content": "Just copped the new $MINTED hoodie! The quality is insane 🔥",
+      "image": "/person-wearing-black-crypto-hoodie-taking-mirror-s.png",
+      "likes": 42,
+      "comments": 8,
+      "reposts": 12,
+      "timestamp": "2024-01-15T10:30:00Z",
+      "url": "https://warpcast.com/cryptofashion/0x12345",
+      "featured": false
+    },
+    {
+      "id": "featured-2",
+      "username": "@defi_drip",
+      "platform": "x",
+      "content": "Wearing my @mintedmerch tee to the Base meetup tonight! 💙",
+      "image": "/person-wearing-white-base-blockchain-t-shirt-at-cr.png",
+      "likes": 89,
+      "comments": 15,
+      "reposts": 23,
+      "timestamp": "2024-01-14T18:45:00Z",
+      "url": "https://x.com/defi_drip/status/123456789",
+      "featured": true
+    },
+    {
+      "id": "featured-3",
+      "username": "@nft_collector",
+      "platform": "farcaster",
+      "content": "The $MINTED community is something special. Great merch, great vibes! 🚀",
+      "image": "/group-of-friends-wearing-various-crypto-streetwear.png",
+      "likes": 156,
+      "comments": 31,
+      "reposts": 45,
+      "timestamp": "2024-01-13T14:20:00Z",
+      "url": "https://warpcast.com/nft_collector/0x67890",
+      "featured": true
+    }
+  ],
+  "lastUpdated": "2025-09-02T06:03:02.901Z",
+  "featuredCount": 3,
+  "totalCount": 4
+}

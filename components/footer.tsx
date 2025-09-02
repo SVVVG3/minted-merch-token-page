@@ -30,7 +30,14 @@ export function Footer() {
                   </a>
                 </Button>
                 <div className="px-2 py-1 text-xs text-foreground/80">
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a 
+                    href="#token" 
+                    className="hover:text-primary transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      document.getElementById('token')?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                  >
                     Become a Merch Mogul
                   </a>
                 </div>

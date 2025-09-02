@@ -24,8 +24,8 @@ export default function HomePage() {
         ;(window as any).testLinkMethods = testLinkMethods
         console.log('🔧 Debug functions exposed: window.debugMiniAppContext() and window.testLinkMethods()')
         
-        // Import and initialize the SDK
-        const { sdk } = await import('@farcaster/miniapp-sdk')
+        // TEMPORARILY DISABLED SDK TO TEST LINK BEHAVIOR
+        // const { sdk } = await import('@farcaster/miniapp-sdk')
         
         // Wait for DOM to be fully ready
         if (document.readyState !== 'complete') {
@@ -37,20 +37,15 @@ export default function HomePage() {
         // Small delay to ensure everything is rendered
         await new Promise(resolve => setTimeout(resolve, 100))
         
-        // Call ready to dismiss splash screen
-        await sdk.actions.ready()
-        console.log('✅ Farcaster Mini App ready() called - splash screen should dismiss')
+        // TEMPORARILY DISABLED SDK READY CALL
+        // await sdk.actions.ready()
+        console.log('🚫 SDK disabled for link testing')
         
       } catch (error) {
         console.error('❌ Error initializing Farcaster Mini App:', error)
         // Still try to call ready even if there's an error
-        try {
-          const { sdk } = await import('@farcaster/miniapp-sdk')
-          await sdk.actions.ready()
-          console.log('✅ Fallback ready() called')
-        } catch (fallbackError) {
-          console.error('❌ Fallback ready() also failed:', fallbackError)
-        }
+        // TEMPORARILY DISABLED FALLBACK SDK
+        console.log('🚫 Fallback SDK also disabled for testing')
       }
     }
     

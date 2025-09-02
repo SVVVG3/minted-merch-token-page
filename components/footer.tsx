@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-import { openExternalUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
+// Removed utility imports to test if they're interfering
+// import { openExternalUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
 
 export function Footer() {
   return (

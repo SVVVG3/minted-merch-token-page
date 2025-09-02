@@ -45,14 +45,14 @@ export const metadata: Metadata = {
     // Farcaster Mini App embed support
     'fc:miniapp': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/og-image.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-logo.png",
       button: {
-        title: "🚀 Open MintedMerch",
+        title: "Where Merch Meets Tokens",
         action: {
           type: "launch_miniapp",
           url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
           name: "MintedMerch",
-          splashImageUrl: "https://coin.mintedmerch.shop/mintedmerch-logo.png",
+          splashImageUrl: "https://coin.mintedmerch.shop/splash-logo.png",
           splashBackgroundColor: "#000000"
         }
       }
@@ -60,14 +60,14 @@ export const metadata: Metadata = {
     // For backward compatibility
     'fc:frame': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/og-image.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-logo.png",
       button: {
-        title: "🚀 Open MintedMerch",
+        title: "Where Merch Meets Tokens",
         action: {
           type: "launch_frame",
           url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
           name: "MintedMerch",
-          splashImageUrl: "https://coin.mintedmerch.shop/mintedmerch-logo.png",
+          splashImageUrl: "https://coin.mintedmerch.shop/splash-logo.png",
           splashBackgroundColor: "#000000"
         }
       }

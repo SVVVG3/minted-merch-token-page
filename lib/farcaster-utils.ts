@@ -129,16 +129,10 @@ export async function openExternalUrl(url: string): Promise<void> {
     }
   }
   
-  // Fallback approaches
-  console.log('🔗 Trying window.location.href...')
-  try {
-    window.location.href = url
-    console.log('✅ Opened external URL via location.href:', url)
-  } catch (error) {
-    console.warn('❌ location.href failed, trying window.open:', error)
-    window.open(url, '_blank', 'noopener,noreferrer')
-    console.log('✅ Opened external URL via window.open:', url)
-  }
+  // Fallback for desktop - use window.open to open in new tab
+  console.log('🔗 Using window.open for desktop (new tab)...')
+  window.open(url, '_blank', 'noopener,noreferrer')
+  console.log('✅ Opened external URL via window.open:', url)
 }
 
 /**

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { get } from '@vercel/edge-config'
+import fs from 'fs'
+import path from 'path'
 
 interface CommunityPost {
   id: string
@@ -10,29 +12,62 @@ interface CommunityPost {
   likes: number
   comments: number
   reposts: number
-  timestamp?: string
-  url?: string
+  timestamp: string
+  url: string
+  featured?: boolean
 }
 
 export async function GET() {
   try {
     console.log('🚀 Community Posts API called')
     
-    // Read curated posts from Vercel KV
     let curatedPosts: CommunityPost[] = []
+    let dataSource = 'fallback'
     
     try {
-      const data = await get('community-posts') as any
+      // Try Edge Config first
+      console.log('🔍 Trying Edge Config...')
+      const edgeConfigData = await get('community-posts') as any
       
-      if (data && data.posts) {
-        const allPosts = data.posts || []
-        // Only show featured posts on the frontend (max 3)
-        curatedPosts = allPosts.filter((post: any) => post.featured).slice(0, 3)
-        console.log('✅ Loaded featured posts from Edge Config:', curatedPosts.length, 'of', allPosts.length, 'total')
+      if (edgeConfigData && edgeConfigData.posts && Array.isArray(edgeConfigData.posts)) {
+        const allPosts = edgeConfigData.posts
+        curatedPosts = allPosts.filter((post: any) => post.featured === true).slice(0, 3)
+        dataSource = 'edge-config'
+        console.log('✅ Loaded from Edge Config:', curatedPosts.length, 'featured posts')
       } else {
-        console.log('⚠️ No data in Edge Config, using fallback posts')
-        // Fallback posts if no data exists
-        curatedPosts = [
+        console.log('⚠️ Edge Config empty or invalid, trying JSON file...')
+        throw new Error('Edge Config empty')
+      }
+    } catch (edgeConfigError) {
+      console.log('🔄 Edge Config failed, trying JSON file...')
+      
+      try {
+        // Fallback to JSON file
+        const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
+        
+        if (fs.existsSync(filePath)) {
+          const fileContents = fs.readFileSync(filePath, 'utf8')
+          const jsonData = JSON.parse(fileContents)
+          
+          if (jsonData && jsonData.posts && Array.isArray(jsonData.posts)) {
+            const allPosts = jsonData.posts
+            curatedPosts = allPosts.filter((post: any) => post.featured === true).slice(0, 3)
+            dataSource = 'json-file'
+            console.log('✅ Loaded from JSON file:', curatedPosts.length, 'featured posts')
+          }
+        } else {
+          console.log('⚠️ JSON file not found')
+        }
+      } catch (jsonError) {
+        console.error('❌ JSON file error:', jsonError)
+      }
+    }
+    
+    // If still no posts, use hardcoded fallback
+    if (curatedPosts.length === 0) {
+      console.log('📦 Using hardcoded fallback posts')
+      dataSource = 'hardcoded-fallback'
+      curatedPosts = [
         {
           id: "fallback-1",
           username: "@cryptofashion",
@@ -71,78 +106,25 @@ export async function GET() {
         }
       ]
     }
-    } catch (edgeConfigError) {
-      console.error('Error accessing Edge Config:', edgeConfigError)
-      // Use fallback posts if Edge Config fails
-      curatedPosts = [
-        {
-          id: "fallback-1",
-          username: "@cryptofashion",
-          platform: "farcaster",
-          content: "Just copped the new $MINTED hoodie! The quality is insane 🔥",
-          image: "/person-wearing-black-crypto-hoodie-taking-mirror-s.png",
-          likes: 42,
-          comments: 8,
-          reposts: 12,
-          timestamp: new Date().toISOString(),
-          url: "https://warpcast.com/cryptofashion/0x12345"
-        }
-      ]
-    }
+    
+    console.log(`📊 Returning ${curatedPosts.length} posts from ${dataSource}`)
     
     return NextResponse.json({
       success: true,
       posts: curatedPosts,
       count: curatedPosts.length,
-      source: curatedPosts.length > 0 ? 'edge-config' : 'fallback'
+      source: dataSource
     })
 
   } catch (error) {
     console.error('❌ Error in community posts API:', error)
     
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to fetch community posts',
-        posts: [] 
-      },
-      { status: 500 }
-    )
-  }
-}
-
-// Future implementation for real Farcaster API integration
-async function fetchFarcasterPosts(query: string = 'mintedmerch'): Promise<CommunityPost[]> {
-  try {
-    // Example using Neynar API (you'd need to sign up and get an API key)
-    // const response = await fetch(`https://api.neynar.com/v2/farcaster/cast/search?q=${query}`, {
-    //   headers: {
-    //     'api_key': process.env.NEYNAR_API_KEY || '',
-    //   }
-    // })
-    
-    // For now, return empty array
-    return []
-  } catch (error) {
-    console.error('Error fetching Farcaster posts:', error)
-    return []
-  }
-}
-
-// Future implementation for X API integration
-async function fetchXPosts(query: string = '@mintedmerch'): Promise<CommunityPost[]> {
-  try {
-    // Example using X API v2 (you'd need to set up X API credentials)
-    // const response = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${query}`, {
-    //   headers: {
-    //     'Authorization': `Bearer ${process.env.X_BEARER_TOKEN}`,
-    //   }
-    // })
-    
-    // For now, return empty array
-    return []
-  } catch (error) {
-    console.error('Error fetching X posts:', error)
-    return []
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to load community posts',
+      posts: [],
+      count: 0,
+      source: 'error'
+    }, { status: 500 })
   }
 }

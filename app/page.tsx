@@ -18,6 +18,11 @@ export default function HomePage() {
         
         console.log('🔄 Initializing Farcaster Mini App...')
         
+        // Expose debug function globally for testing
+        const { debugMiniAppContext } = await import('@/lib/farcaster-utils')
+        ;(window as any).debugMiniAppContext = debugMiniAppContext
+        console.log('🔧 Debug function exposed: window.debugMiniAppContext()')
+        
         // Import and initialize the SDK
         const { sdk } = await import('@farcaster/miniapp-sdk')
         

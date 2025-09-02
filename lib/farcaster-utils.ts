@@ -13,14 +13,14 @@ export async function openExternalUrl(url: string): Promise<void> {
 }
 
 /**
- * Opens shop URL with smart routing - Mini App context goes to app.mintedmerch.shop, 
+ * Opens shop URL with smart routing - Mini App context goes to Farcaster Mini App, 
  * regular context goes to mintedmerch.shop
  */
 export async function openShopUrl(): Promise<void> {
   try {
     // Try to use Farcaster SDK first (Mini App context)
     const { sdk } = await import('@farcaster/miniapp-sdk')
-    await sdk.actions.openUrl('https://app.mintedmerch.shop/')
+    await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
   } catch (error) {
     // Fallback to regular shop for non-Mini App contexts
     window.open('https://mintedmerch.shop/', '_blank', 'noopener,noreferrer')

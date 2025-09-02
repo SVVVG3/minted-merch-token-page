@@ -5,23 +5,33 @@ async function isFarcasterContext(): Promise<boolean> {
   if (typeof window === 'undefined') return false
   
   try {
-    // Try to import the SDK and check if we can access it
+    // Import the SDK and check if we have a valid context
     const { sdk } = await import('@farcaster/miniapp-sdk')
     
-    // Try to use isInMiniApp if it exists
-    if (typeof sdk.context?.isInMiniApp === 'function') {
-      const result = await sdk.context.isInMiniApp()
-      console.log('🔍 SDK isInMiniApp result:', result)
-      return result
+    // Check if we have a valid Mini App context
+    if (sdk.context && typeof sdk.context === 'object') {
+      // If we have user info or client info, we're definitely in a Mini App
+      const hasUser = sdk.context.user && typeof sdk.context.user.fid === 'number'
+      const hasClient = sdk.context.client && typeof sdk.context.client.clientFid === 'number'
+      
+      if (hasUser || hasClient) {
+        console.log('🔍 Mini App context detected via SDK context:', {
+          user: !!hasUser,
+          client: !!hasClient,
+          userFid: sdk.context.user?.fid,
+          clientFid: sdk.context.client?.clientFid
+        })
+        return true
+      }
     }
     
-    // Alternative: try to call ready() to see if we're in Mini App context
+    // If context is empty but SDK loaded, we might still be in Mini App
     if (sdk.actions?.ready) {
-      console.log('🔍 SDK detected, assuming Mini App context')
+      console.log('🔍 SDK actions available, likely Mini App context')
       return true
     }
     
-    console.log('🔍 SDK imported but no Mini App methods found')
+    console.log('🔍 SDK imported but no valid context found')
     return false
   } catch (error) {
     console.log('🔍 SDK import failed, using fallback detection:', error)
@@ -48,7 +58,28 @@ export async function debugMiniAppContext(): Promise<void> {
     const { sdk } = await import('@farcaster/miniapp-sdk')
     console.log('🔧 DEBUG: SDK imported successfully:', !!sdk)
     console.log('🔧 DEBUG: SDK actions:', Object.keys(sdk.actions || {}))
-    console.log('🔧 DEBUG: SDK context:', Object.keys(sdk.context || {}))
+    console.log('🔧 DEBUG: SDK context keys:', Object.keys(sdk.context || {}))
+    console.log('🔧 DEBUG: Full SDK context:', sdk.context)
+    
+    if (sdk.context?.user) {
+      console.log('🔧 DEBUG: User context:', {
+        fid: sdk.context.user.fid,
+        username: sdk.context.user.username,
+        displayName: sdk.context.user.displayName
+      })
+    }
+    
+    if (sdk.context?.client) {
+      console.log('🔧 DEBUG: Client context:', {
+        platformType: sdk.context.client.platformType,
+        clientFid: sdk.context.client.clientFid,
+        added: sdk.context.client.added
+      })
+    }
+    
+    if (sdk.context?.location) {
+      console.log('🔧 DEBUG: Location context:', sdk.context.location)
+    }
   } catch (error) {
     console.log('🔧 DEBUG: SDK import failed:', error)
   }

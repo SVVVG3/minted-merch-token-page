@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     // Farcaster Mini App embed support
     'fc:miniapp': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/embed-image.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-image-new.png",
       button: {
         title: "Where Tokens Meet Merch",
         action: {
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     // For backward compatibility
     'fc:frame': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/embed-image.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-image-new.png",
       button: {
         title: "Where Tokens Meet Merch",
         action: {

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
+import { openExternalUrl } from "@/lib/farcaster-utils"
 
 export function Footer() {
   return (
@@ -54,7 +55,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}
+                onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}
               >
                 <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
                 Buy $mintedmerch
@@ -63,7 +64,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => window.open('https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
+                onClick={() => openExternalUrl('https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
               >
                 <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-3 w-3 mr-1" />
                 Basescan
@@ -72,7 +73,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => window.open('https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
+                onClick={() => openExternalUrl('https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
               >
                 <img src="/ClankerLogoBars.png" alt="Clanker" className="h-3 w-3 mr-1" />
                 Clanker
@@ -81,7 +82,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => window.open('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
+                onClick={() => openExternalUrl('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
               >
                 <img src="/DexscreenerLogo.png" alt="DexScreener" className="h-3 w-3 mr-1" />
                 DexScreener
@@ -90,7 +91,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => window.open('https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed', '_blank', 'noopener,noreferrer')}
+                onClick={() => openExternalUrl('https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed')}
               >
                 <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-3 w-3 mr-1" />
                 GeckoTerminal

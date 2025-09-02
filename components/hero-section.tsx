@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { openExternalUrl } from "@/lib/farcaster-utils"
+import { openExternalUrl, openShopUrl } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
 
 export function HeroSection() {
@@ -50,7 +50,7 @@ export function HeroSection() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-lg px-8" onClick={() => openExternalUrl('https://mintedmerch.shop/')}>
+              <Button size="lg" className="text-lg px-8" onClick={() => openShopUrl()}>
                 Shop Merch
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>

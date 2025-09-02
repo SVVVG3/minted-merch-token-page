@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
 import { useState, useEffect } from "react"
+import { openShopUrl } from "@/lib/farcaster-utils"
 
 interface ShopifyProduct {
   id: string
@@ -381,7 +382,7 @@ export function MerchShowcase() {
         )}
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" onClick={() => window.open('https://mintedmerch.shop', '_blank', 'noopener,noreferrer')}>
+          <Button size="lg" variant="outline" onClick={() => openShopUrl()}>
             <ExternalLink className="h-4 w-4 mr-2" />
             View All Merch
           </Button>

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Copy, ExternalLink, TrendingUp, Users, Zap, DollarSign, UserCheck, BarChart3, Check } from "lucide-react"
 import { useState, useEffect } from "react"
+import { openExternalUrl } from "@/lib/farcaster-utils"
 
 interface TokenData {
   priceUsd?: string
@@ -312,19 +313,19 @@ export function TokenInfo() {
                 </Button>
               </div>
               <div className="flex justify-center gap-2 flex-wrap">
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
                   <img src="/UniswapLogo.png" alt="Uniswap" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open(`https://basescan.org/address/${contractAddress}`, '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl(`https://basescan.org/address/${contractAddress}`)}>
                   <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/ClankerLogoBars.png" alt="Clanker" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/DexscreenerLogo.png" alt="Dexscreener" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://www.geckoterminal.com/base/pools/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://www.geckoterminal.com/base/pools/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
               </div>
@@ -346,19 +347,19 @@ export function TokenInfo() {
                 </Button>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
                   <img src="/UniswapLogo.png" alt="Uniswap" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open(`https://basescan.org/address/${contractAddress}`, '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl(`https://basescan.org/address/${contractAddress}`)}>
                   <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/ClankerLogoBars.png" alt="Clanker" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/DexscreenerLogo.png" alt="Dexscreener" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => window.open('https://www.geckoterminal.com/base/pools/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}>
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://www.geckoterminal.com/base/pools/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}>
                   <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
               </div>

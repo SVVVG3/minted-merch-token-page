@@ -50,7 +50,7 @@ export const metadata: Metadata = {
         title: "Where Tokens Meet Merch",
         action: {
           type: "launch_miniapp",
-          url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
+          url: "https://coin.mintedmerch.shop",
           name: "MintedMerch",
           splashImageUrl: "https://coin.mintedmerch.shop/splash-logo.png",
           splashBackgroundColor: "#000000"
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
         title: "Where Tokens Meet Merch",
         action: {
           type: "launch_frame",
-          url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
+          url: "https://coin.mintedmerch.shop",
           name: "MintedMerch",
           splashImageUrl: "https://coin.mintedmerch.shop/splash-logo.png",
           splashBackgroundColor: "#000000"

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { TokenInfo } from "@/components/token-info"
@@ -9,40 +9,23 @@ import { CommunityPosts } from "@/components/community-posts"
 import { Footer } from "@/components/footer"
 
 export default function HomePage() {
-  const [isInterfaceReady, setIsInterfaceReady] = useState(false)
-  
-  // Call ready only when interface is fully loaded and ready
+  // Call ready exactly as documented
   useEffect(() => {
-    const callReady = async () => {
+    const initializeApp = async () => {
       try {
+        // Import the SDK
         const { sdk } = await import('@farcaster/miniapp-sdk')
+        
+        // Call ready after app is fully loaded
         await sdk.actions.ready()
-        console.log('✅ Farcaster Mini App ready called - interface loaded')
+        console.log('✅ Farcaster Mini App ready() called successfully')
       } catch (error) {
-        console.log('ℹ️ Not in Farcaster Mini App context:', error)
+        console.error('❌ Error calling ready():', error)
       }
     }
     
-    if (isInterfaceReady) {
-      callReady()
-    }
-  }, [isInterfaceReady])
-  
-  // Set interface ready after all content has loaded
-  useEffect(() => {
-    const handleLoad = () => {
-      // Wait a bit more to ensure all content is rendered
-      setTimeout(() => {
-        setIsInterfaceReady(true)
-      }, 500)
-    }
-    
-    if (document.readyState === 'complete') {
-      handleLoad()
-    } else {
-      window.addEventListener('load', handleLoad)
-      return () => window.removeEventListener('load', handleLoad)
-    }
+    // Call ready immediately when component mounts
+    initializeApp()
   }, [])
   return (
     <div className="min-h-screen bg-background dark">

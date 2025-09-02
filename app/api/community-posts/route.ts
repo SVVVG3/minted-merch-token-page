@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { kv } from '@vercel/kv'
 
 interface CommunityPost {
   id: string
@@ -19,22 +18,21 @@ export async function GET() {
   try {
     console.log('🚀 Community Posts API called')
     
-    // Read curated posts from JSON file
-    const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
-    
+    // Read curated posts from Vercel KV
     let curatedPosts: CommunityPost[] = []
     
-    if (fs.existsSync(filePath)) {
-      const fileContents = fs.readFileSync(filePath, 'utf8')
-      const data = JSON.parse(fileContents)
-      const allPosts = data.posts || []
-      // Only show featured posts on the frontend (max 3)
-      curatedPosts = allPosts.filter((post: any) => post.featured).slice(0, 3)
-      console.log('✅ Loaded featured posts from JSON file:', curatedPosts.length, 'of', allPosts.length, 'total')
-    } else {
-      console.log('⚠️ JSON file not found, using fallback posts')
-      // Fallback posts if file doesn't exist
-      curatedPosts = [
+    try {
+      const data = await kv.get('community-posts') as any
+      
+      if (data && data.posts) {
+        const allPosts = data.posts || []
+        // Only show featured posts on the frontend (max 3)
+        curatedPosts = allPosts.filter((post: any) => post.featured).slice(0, 3)
+        console.log('✅ Loaded featured posts from KV:', curatedPosts.length, 'of', allPosts.length, 'total')
+      } else {
+        console.log('⚠️ No data in KV, using fallback posts')
+        // Fallback posts if no data exists
+        curatedPosts = [
         {
           id: "fallback-1",
           username: "@cryptofashion",
@@ -73,12 +71,30 @@ export async function GET() {
         }
       ]
     }
+    } catch (kvError) {
+      console.error('Error accessing KV:', kvError)
+      // Use fallback posts if KV fails
+      curatedPosts = [
+        {
+          id: "fallback-1",
+          username: "@cryptofashion",
+          platform: "farcaster",
+          content: "Just copped the new $MINTED hoodie! The quality is insane 🔥",
+          image: "/person-wearing-black-crypto-hoodie-taking-mirror-s.png",
+          likes: 42,
+          comments: 8,
+          reposts: 12,
+          timestamp: new Date().toISOString(),
+          url: "https://warpcast.com/cryptofashion/0x12345"
+        }
+      ]
+    }
     
     return NextResponse.json({
       success: true,
       posts: curatedPosts,
       count: curatedPosts.length,
-      source: fs.existsSync(filePath) ? 'json-file' : 'fallback'
+      source: curatedPosts.length > 0 ? 'kv-storage' : 'fallback'
     })
 
   } catch (error) {

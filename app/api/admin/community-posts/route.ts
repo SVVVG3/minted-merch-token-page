@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { kv } from '@vercel/kv'
 
 interface CommunityPost {
   id: string
@@ -44,16 +43,8 @@ export async function POST(request: Request) {
       totalCount: posts.length
     }
 
-    // Write to JSON file
-    const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
-    
-    // Ensure the data directory exists
-    const dataDir = path.dirname(filePath)
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true })
-    }
-
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+    // Save to Vercel KV
+    await kv.set('community-posts', data)
 
     console.log('✅ Community posts saved:', {
       total: posts.length,
@@ -88,12 +79,10 @@ export async function POST(request: Request) {
 // GET method to fetch posts for admin (same as public API but with admin metadata)
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
+    // Get data from Vercel KV
+    const data = await kv.get('community-posts') as any
     
-    if (fs.existsSync(filePath)) {
-      const fileContents = fs.readFileSync(filePath, 'utf8')
-      const data = JSON.parse(fileContents)
-      
+    if (data && data.posts) {
       return NextResponse.json({
         success: true,
         posts: data.posts || [],

@@ -9,21 +9,40 @@ import { CommunityPosts } from "@/components/community-posts"
 import { Footer } from "@/components/footer"
 
 export default function HomePage() {
-  // Call ready when component is mounted and interface is ready
+  const [isInterfaceReady, setIsInterfaceReady] = useState(false)
+  
+  // Call ready only when interface is fully loaded and ready
   useEffect(() => {
     const callReady = async () => {
       try {
         const { sdk } = await import('@farcaster/miniapp-sdk')
         await sdk.actions.ready()
-        console.log('✅ Farcaster Mini App ready called')
+        console.log('✅ Farcaster Mini App ready called - interface loaded')
       } catch (error) {
         console.log('ℹ️ Not in Farcaster Mini App context:', error)
       }
     }
     
-    // Call ready after a short delay to ensure DOM is rendered
-    const timer = setTimeout(callReady, 200)
-    return () => clearTimeout(timer)
+    if (isInterfaceReady) {
+      callReady()
+    }
+  }, [isInterfaceReady])
+  
+  // Set interface ready after all content has loaded
+  useEffect(() => {
+    const handleLoad = () => {
+      // Wait a bit more to ensure all content is rendered
+      setTimeout(() => {
+        setIsInterfaceReady(true)
+      }, 500)
+    }
+    
+    if (document.readyState === 'complete') {
+      handleLoad()
+    } else {
+      window.addEventListener('load', handleLoad)
+      return () => window.removeEventListener('load', handleLoad)
+    }
   }, [])
   return (
     <div className="min-h-screen bg-background dark">

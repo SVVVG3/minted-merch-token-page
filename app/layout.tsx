@@ -83,7 +83,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/farcaster.json" />
+        <link rel="manifest" href="/.well-known/farcaster.json" />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
-import { openExternalUrl, openShopUrl } from "@/lib/farcaster-utils"
+import { openExternalUrl, openShopUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -58,16 +58,16 @@ export function Header() {
             <button onClick={() => scrollToSection('community')} className="text-foreground hover:text-primary transition-colors">
               Community
             </button>
-            <a href="https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
+            <button onClick={() => openMiniAppUrl()} className="text-foreground hover:text-primary transition-colors">
               Mini App
-            </a>
+            </button>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="outline" size="sm" onClick={() => openShopUrl()}>
               Shop Now
             </Button>
-            <Button size="sm" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
+            <Button size="sm" onClick={() => buyToken()}>
               Buy $mintedmerch
             </Button>
           </div>
@@ -99,14 +99,14 @@ export function Header() {
               <button onClick={() => scrollToSection('community')} className="text-foreground hover:text-primary transition-colors text-left py-2 px-2 rounded hover:bg-primary/10">
                 Community
               </button>
-              <a href="https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors text-left py-2 px-2 rounded hover:bg-primary/10">
+              <button onClick={() => openMiniAppUrl()} className="text-foreground hover:text-primary transition-colors text-left py-2 px-2 rounded hover:bg-primary/10">
                 Mini App
-              </a>
+              </button>
               <div className="flex flex-col space-y-2 pt-4 px-2">
                 <Button variant="outline" size="sm" className="w-full" onClick={() => openShopUrl()}>
                   Shop Now
                 </Button>
-                <Button size="sm" className="w-full" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
+                <Button size="sm" className="w-full" onClick={() => buyToken()}>
                   Buy $mintedmerch
                 </Button>
               </div>

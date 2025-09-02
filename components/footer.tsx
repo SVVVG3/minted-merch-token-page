@@ -54,76 +54,46 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}
               >
-                <a
-                  href="https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
-                  Buy $mintedmerch
-                </a>
+                <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
+                Buy $mintedmerch
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => window.open('https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
               >
-                <a
-                  href="https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-3 w-3 mr-1" />
-                  Basescan
-                </a>
+                <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-3 w-3 mr-1" />
+                Basescan
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => window.open('https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
               >
-                <a
-                  href="https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src="/ClankerLogoBars.png" alt="Clanker" className="h-3 w-3 mr-1" />
-                  Clanker
-                </a>
+                <img src="/ClankerLogoBars.png" alt="Clanker" className="h-3 w-3 mr-1" />
+                Clanker
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => window.open('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07', '_blank', 'noopener,noreferrer')}
               >
-                <a
-                  href="https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src="/DexscreenerLogo.png" alt="DexScreener" className="h-3 w-3 mr-1" />
-                  DexScreener
-                </a>
+                <img src="/DexscreenerLogo.png" alt="DexScreener" className="h-3 w-3 mr-1" />
+                DexScreener
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => window.open('https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed', '_blank', 'noopener,noreferrer')}
               >
-                <a
-                  href="https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-3 w-3 mr-1" />
-                  GeckoTerminal
-                </a>
+                <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-3 w-3 mr-1" />
+                GeckoTerminal
               </Button>
             </div>
           </div>

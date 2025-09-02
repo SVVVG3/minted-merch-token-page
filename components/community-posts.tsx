@@ -198,10 +198,9 @@ export function CommunityPosts() {
         )}
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" asChild>
-            <a href="https://cura.network/mintedmerch?t=hot" target="_blank" rel="noopener noreferrer">
-              View More Posts
-            </a>
+          <Button size="lg" variant="outline" onClick={() => window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')}>
+            View More Posts
+            <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>

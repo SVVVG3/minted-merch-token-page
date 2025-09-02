@@ -49,20 +49,14 @@ export function HeroSection() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-lg px-8" asChild>
-                <a href="https://mintedmerch.shop/" target="_blank" rel="noopener noreferrer">
-                  Shop Merch
-                </a>
+              <Button size="lg" className="text-lg px-8" onClick={() => window.open('https://mintedmerch.shop/', '_blank', 'noopener,noreferrer')}>
+                Shop Merch
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent" asChild>
-                <a href="https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                  <img src="/UniswapLogo.png" alt="Uniswap" className="h-5 w-5" /> Buy $mintedmerch
-                </a>
+              <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+                <img src="/UniswapLogo.png" alt="Uniswap" className="h-5 w-5" /> Buy $mintedmerch
               </Button>
-              <Button variant="secondary" size="lg" className="text-lg px-8" asChild>
-                <a href="https://cura.network/mintedmerch?t=hot" target="_blank" rel="noopener noreferrer">
-                  Join Our Community
-                </a>
+              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')}>
+                Join Our Community
               </Button>
             </div>
 

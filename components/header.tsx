@@ -63,15 +63,11 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm" asChild>
-              <a href="https://mintedmerch.shop/" target="_blank" rel="noopener noreferrer">
-                Shop Now
-              </a>
+            <Button variant="outline" size="sm" onClick={() => window.open('https://mintedmerch.shop/', '_blank', 'noopener,noreferrer')}>
+              Shop Now
             </Button>
-            <Button size="sm" asChild>
-              <a href="https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base" target="_blank" rel="noopener noreferrer">
-                Buy $mintedmerch
-              </a>
+            <Button size="sm" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+              Buy $mintedmerch
             </Button>
           </div>
 
@@ -106,15 +102,11 @@ export function Header() {
                 Mini App
               </a>
               <div className="flex flex-col space-y-2 pt-4 px-2">
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <a href="https://mintedmerch.shop/" target="_blank" rel="noopener noreferrer">
-                    Shop Now
-                  </a>
+                <Button variant="outline" size="sm" className="w-full" onClick={() => window.open('https://mintedmerch.shop/', '_blank', 'noopener,noreferrer')}>
+                  Shop Now
                 </Button>
-                <Button size="sm" className="w-full" asChild>
-                  <a href="https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base" target="_blank" rel="noopener noreferrer">
-                    Buy $mintedmerch
-                  </a>
+                <Button size="sm" className="w-full" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+                  Buy $mintedmerch
                 </Button>
               </div>
             </nav>

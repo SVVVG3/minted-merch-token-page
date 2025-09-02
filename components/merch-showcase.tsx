@@ -381,11 +381,9 @@ export function MerchShowcase() {
         )}
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" asChild>
-            <a href="https://mintedmerch.shop" target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View All Merch
-            </a>
+          <Button size="lg" variant="outline" onClick={() => window.open('https://mintedmerch.shop', '_blank', 'noopener,noreferrer')}>
+            <ExternalLink className="h-4 w-4 mr-2" />
+            View All Merch
           </Button>
         </div>
       </div>

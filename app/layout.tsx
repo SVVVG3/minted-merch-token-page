@@ -22,14 +22,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'MintedMerch - Where Tokens Meet Merch',
     description: 'Minted Merch is an ecosystem where tokens unlock exclusive collaborations, token-gated discounts, and a growing community.',
-    url: 'https://mintedmerch.shop',
+    url: 'https://coin.mintedmerch.shop',
     siteName: 'MintedMerch',
     images: [
       {
-        url: '/mintedmerch-logo.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'MintedMerch Logo',
+        alt: 'MintedMerch - Where Tokens Meet Merch',
       },
     ],
     locale: 'en_US',
@@ -39,7 +39,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'MintedMerch - Where Tokens Meet Merch',
     description: 'Minted Merch is an ecosystem where tokens unlock exclusive collaborations, token-gated discounts, and a growing community.',
-    images: ['/mintedmerch-logo.png'],
+    images: ['/og-image.png'],
+  },
+  other: {
+    // Farcaster Frame/Mini App support
+    'fc:frame': 'vNext',
+    'fc:frame:image': 'https://coin.mintedmerch.shop/og-image.png',
+    'fc:frame:button:1': 'Open Mini App',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch',
   },
 }
 

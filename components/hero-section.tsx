@@ -45,7 +45,7 @@ export function HeroSection() {
                 <span className="text-primary block">Meet Merch</span>
               </h1>
               <p className="text-xl text-muted-foreground text-pretty max-w-lg">
-                Unlock exclusive collaborations, token-gated discounts, and a growing community. Our mission is to connect onchain communities with merch that fuels growth.
+                Unlock exclusive collaborations, custom merch orders, token gated discounts, and a growing community. Our mission is to connect onchain communities with merch that fuels growth.
               </p>
             </div>
 

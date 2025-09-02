@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart, MessageCircle, Repeat2, ExternalLink } from "lucide-react"
 import { useState, useEffect } from "react"
+import { openExternalUrl } from "@/lib/farcaster-utils"
 
 interface CommunityPost {
   id: string
@@ -150,7 +151,7 @@ export function CommunityPosts() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
-            <Card key={post.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => window.open(post.url, '_blank', 'noopener,noreferrer')}>
+            <Card key={post.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => openExternalUrl(post.url)}>
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -198,7 +199,7 @@ export function CommunityPosts() {
         )}
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" onClick={() => window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')}>
+          <Button size="lg" variant="outline" onClick={() => openExternalUrl('https://cura.network/mintedmerch?t=hot')}>
             View More Posts
             <ExternalLink className="ml-2 h-4 w-4" />
           </Button>

@@ -55,46 +55,56 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => buyToken()}
+                asChild
               >
-                <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
-                Buy $mintedmerch
+                <a href="https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base" target="_blank" rel="noopener noreferrer">
+                  <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
+                  Buy $mintedmerch
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
+                asChild
               >
-                <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-3 w-3 mr-1" />
-                Basescan
+                <a href="https://basescan.org/address/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07" target="_blank" rel="noopener noreferrer">
+                  <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-3 w-3 mr-1" />
+                  Basescan
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
+                asChild
               >
-                <img src="/ClankerLogoBars.png" alt="Clanker" className="h-3 w-3 mr-1" />
-                Clanker
+                <a href="https://www.clanker.world/clanker/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07" target="_blank" rel="noopener noreferrer">
+                  <img src="/ClankerLogoBars.png" alt="Clanker" className="h-3 w-3 mr-1" />
+                  Clanker
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07')}
+                asChild
               >
-                <img src="/DexscreenerLogo.png" alt="DexScreener" className="h-3 w-3 mr-1" />
-                DexScreener
+                <a href="https://dexscreener.com/base/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07" target="_blank" rel="noopener noreferrer">
+                  <img src="/DexscreenerLogo.png" alt="DexScreener" className="h-3 w-3 mr-1" />
+                  DexScreener
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed')}
+                asChild
               >
-                <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-3 w-3 mr-1" />
-                GeckoTerminal
+                <a href="https://www.geckoterminal.com/base/pools/0x23d8822b09d7b5194e7bef7acb431afafefa8d8b890a3fb38637d201f8fd3f8d?utm_source=embed" target="_blank" rel="noopener noreferrer">
+                  <img src="/GeckoTerminalLogoFullColor.png" alt="GeckoTerminal" className="h-3 w-3 mr-1" />
+                  GeckoTerminal
+                </a>
               </Button>
             </div>
           </div>
@@ -106,28 +116,34 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://mintedmerch.shop/')}
+                asChild
               >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Online
+                <a href="https://mintedmerch.shop/" target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  Online
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openMiniAppUrl()}
+                asChild
               >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Mini App
+                <a href="https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch" target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  Mini App
+                </a>
               </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://farcaster.xyz/~/channel/mintedmerch')}
+                asChild
               >
-                <img src="/FarcasterLogoWhite.png" alt="Farcaster" className="h-3 w-3 mr-1" />
-                Farcaster
+                <a href="https://farcaster.xyz/~/channel/mintedmerch" target="_blank" rel="noopener noreferrer">
+                  <img src="/FarcasterLogoWhite.png" alt="Farcaster" className="h-3 w-3 mr-1" />
+                  Farcaster
+                </a>
               </Button>
               <Button
                 variant="outline"

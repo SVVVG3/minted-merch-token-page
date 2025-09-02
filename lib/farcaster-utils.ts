@@ -1,35 +1,17 @@
 /**
- * Detects if we're in a Farcaster Mini App context
+ * Detects if we're in a Farcaster Mini App context using official SDK method
  */
 async function isFarcasterContext(): Promise<boolean> {
   if (typeof window === 'undefined') return false
   
   try {
-    // Import the SDK and check if we have a valid context
+    // Use the official SDK method for detection
     const { sdk } = await import('@farcaster/miniapp-sdk')
-    
-    // Check if we have a valid Mini App context
-    if (sdk.context && typeof sdk.context === 'object') {
-      // If we have user info or client info, we're definitely in a Mini App
-      const hasUser = sdk.context.user && typeof sdk.context.user.fid === 'number'
-      const hasClient = sdk.context.client && typeof sdk.context.client.clientFid === 'number'
-      
-      if (hasUser || hasClient) {
-        console.log('🔍 Mini App context detected via SDK context:', {
-          user: !!hasUser,
-          client: !!hasClient,
-          userFid: sdk.context.user?.fid,
-          clientFid: sdk.context.client?.clientFid
-        })
-        return true
-      }
-    }
-    
-    // SDK can be imported anywhere, but without valid context we're NOT in Mini App
-    console.log('🔍 SDK imported but no valid Mini App context found')
-    return false
+    const isMiniApp = await sdk.isInMiniApp()
+    console.log('🔍 Official SDK isInMiniApp result:', isMiniApp)
+    return isMiniApp
   } catch (error) {
-    console.log('🔍 SDK import failed, using fallback detection:', error)
+    console.log('🔍 SDK isInMiniApp failed, using fallback detection:', error)
     // Fallback detection methods
     const fallbackResult = !!(window as any).farcaster || 
            window.location.href.includes('farcaster.xyz') ||
@@ -127,36 +109,35 @@ export async function testLinkMethods(): Promise<void> {
 }
 
 /**
- * Opens a URL in external browser - uses the same method as working buttons
+ * Opens a URL in external browser - tries multiple approaches
  */
 export async function openExternalUrl(url: string): Promise<void> {
   console.log('🔗 openExternalUrl called with:', url)
   const isMiniApp = await isFarcasterContext()
   console.log('🔗 Mini App context detected:', isMiniApp)
   
-  // Use the same method as the working buttons: create and click an <a> element
-  console.log('🔗 Creating and clicking <a> element (same as working buttons)...')
+  if (isMiniApp) {
+    try {
+      // In Mini App context, try the SDK method first
+      const { sdk } = await import('@farcaster/miniapp-sdk')
+      console.log('🔗 Attempting SDK openUrl...')
+      await sdk.actions.openUrl(url)
+      console.log('✅ Opened external URL via SDK openUrl:', url)
+      return
+    } catch (error) {
+      console.warn('❌ SDK openUrl failed, trying alternatives:', error)
+    }
+  }
+  
+  // Fallback approaches
+  console.log('🔗 Trying window.location.href...')
   try {
-    const link = document.createElement('a')
-    link.href = url
-    link.target = '_blank'
-    link.rel = 'noopener noreferrer'
-    
-    // Add to DOM temporarily (some browsers require this)
-    link.style.display = 'none'
-    document.body.appendChild(link)
-    
-    // Click the link
-    link.click()
-    
-    // Clean up
-    document.body.removeChild(link)
-    
-    console.log('✅ Opened external URL via <a> element click:', url)
+    window.location.href = url
+    console.log('✅ Opened external URL via location.href:', url)
   } catch (error) {
-    console.warn('❌ Failed to use <a> element, falling back to window.open:', error)
+    console.warn('❌ location.href failed, trying window.open:', error)
     window.open(url, '_blank', 'noopener,noreferrer')
-    console.log('✅ Opened external URL via window.open fallback:', url)
+    console.log('✅ Opened external URL via window.open:', url)
   }
 }
 

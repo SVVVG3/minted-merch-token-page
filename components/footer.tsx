@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-// Removed utility imports to test if they're interfering
-// import { openExternalUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
+import { openExternalUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
 
 export function Footer() {
   return (
@@ -131,12 +130,10 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                asChild
+                onClick={() => openExternalUrl('https://google.com')}
               >
-                <a href="https://google.com" target="_blank" rel="noopener noreferrer external" data-external="true">
-                  <ExternalLink className="h-3 w-3 mr-1" />
-                  TEST WITH ATTRS
-                </a>
+                <ExternalLink className="h-3 w-3 mr-1" />
+                TEST UTILITY FUNC
               </Button>
               <Button
                 variant="outline"

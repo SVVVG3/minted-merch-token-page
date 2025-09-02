@@ -42,12 +42,36 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   other: {
-    // Farcaster Frame/Mini App support
-    'fc:frame': 'vNext',
-    'fc:frame:image': 'https://coin.mintedmerch.shop/og-image.png',
-    'fc:frame:button:1': 'Open Mini App',
-    'fc:frame:button:1:action': 'link',
-    'fc:frame:button:1:target': 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch',
+    // Farcaster Mini App embed support
+    'fc:miniapp': JSON.stringify({
+      version: "1",
+      imageUrl: "https://coin.mintedmerch.shop/og-image.png",
+      button: {
+        title: "🚀 Open MintedMerch",
+        action: {
+          type: "launch_miniapp",
+          url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
+          name: "MintedMerch",
+          splashImageUrl: "https://coin.mintedmerch.shop/mintedmerch-logo.png",
+          splashBackgroundColor: "#000000"
+        }
+      }
+    }),
+    // For backward compatibility
+    'fc:frame': JSON.stringify({
+      version: "1",
+      imageUrl: "https://coin.mintedmerch.shop/og-image.png",
+      button: {
+        title: "🚀 Open MintedMerch",
+        action: {
+          type: "launch_frame",
+          url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
+          name: "MintedMerch",
+          splashImageUrl: "https://coin.mintedmerch.shop/mintedmerch-logo.png",
+          splashBackgroundColor: "#000000"
+        }
+      }
+    }),
   },
 }
 

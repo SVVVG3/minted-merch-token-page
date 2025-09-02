@@ -25,13 +25,8 @@ async function isFarcasterContext(): Promise<boolean> {
       }
     }
     
-    // If context is empty but SDK loaded, we might still be in Mini App
-    if (sdk.actions?.ready) {
-      console.log('🔍 SDK actions available, likely Mini App context')
-      return true
-    }
-    
-    console.log('🔍 SDK imported but no valid context found')
+    // SDK can be imported anywhere, but without valid context we're NOT in Mini App
+    console.log('🔍 SDK imported but no valid Mini App context found')
     return false
   } catch (error) {
     console.log('🔍 SDK import failed, using fallback detection:', error)

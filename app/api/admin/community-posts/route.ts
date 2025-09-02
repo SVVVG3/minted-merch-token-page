@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { get } from '@vercel/edge-config'
+import fs from 'fs'
+import path from 'path'
 
 interface CommunityPost {
   id: string
@@ -43,8 +44,9 @@ export async function POST(request: Request) {
       totalCount: posts.length
     }
 
-    // Save to Edge Config
-    await set('community-posts', data)
+    // Save to JSON file
+    const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
 
     console.log('✅ Community posts saved:', {
       total: posts.length,
@@ -79,8 +81,14 @@ export async function POST(request: Request) {
 // GET method to fetch posts for admin (same as public API but with admin metadata)
 export async function GET() {
   try {
-    // Get data from Edge Config
-    const data = await get('community-posts') as any
+    // Get data from JSON file
+    const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
+    let data = null
+    
+    if (fs.existsSync(filePath)) {
+      const fileContents = fs.readFileSync(filePath, 'utf8')
+      data = JSON.parse(fileContents)
+    }
     
     if (data && data.posts) {
       return NextResponse.json({

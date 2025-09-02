@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { get } from '@vercel/edge-config'
 import fs from 'fs'
 import path from 'path'
 
@@ -25,42 +24,27 @@ export async function GET() {
     let dataSource = 'fallback'
     
     try {
-      // Try Edge Config first
-      console.log('🔍 Trying Edge Config...')
-      const edgeConfigData = await get('community-posts') as any
+      // Read directly from JSON file
+      console.log('📄 Reading from JSON file...')
+      const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
       
-      if (edgeConfigData && edgeConfigData.posts && Array.isArray(edgeConfigData.posts)) {
-        const allPosts = edgeConfigData.posts
-        curatedPosts = allPosts.filter((post: any) => post.featured === true).slice(0, 3)
-        dataSource = 'edge-config'
-        console.log('✅ Loaded from Edge Config:', curatedPosts.length, 'featured posts')
-      } else {
-        console.log('⚠️ Edge Config empty or invalid, trying JSON file...')
-        throw new Error('Edge Config empty')
-      }
-    } catch (edgeConfigError) {
-      console.log('🔄 Edge Config failed, trying JSON file...')
-      
-      try {
-        // Fallback to JSON file
-        const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
+      if (fs.existsSync(filePath)) {
+        const fileContents = fs.readFileSync(filePath, 'utf8')
+        const jsonData = JSON.parse(fileContents)
         
-        if (fs.existsSync(filePath)) {
-          const fileContents = fs.readFileSync(filePath, 'utf8')
-          const jsonData = JSON.parse(fileContents)
-          
-          if (jsonData && jsonData.posts && Array.isArray(jsonData.posts)) {
-            const allPosts = jsonData.posts
-            curatedPosts = allPosts.filter((post: any) => post.featured === true).slice(0, 3)
-            dataSource = 'json-file'
-            console.log('✅ Loaded from JSON file:', curatedPosts.length, 'featured posts')
-          }
+        if (jsonData && jsonData.posts && Array.isArray(jsonData.posts)) {
+          const allPosts = jsonData.posts
+          curatedPosts = allPosts.filter((post: any) => post.featured === true).slice(0, 3)
+          dataSource = 'json-file'
+          console.log('✅ Loaded from JSON file:', curatedPosts.length, 'featured posts out of', allPosts.length, 'total')
         } else {
-          console.log('⚠️ JSON file not found')
+          console.log('⚠️ Invalid JSON structure')
         }
-      } catch (jsonError) {
-        console.error('❌ JSON file error:', jsonError)
+      } else {
+        console.log('⚠️ JSON file not found')
       }
+    } catch (jsonError) {
+      console.error('❌ JSON file error:', jsonError)
     }
     
     // If still no posts, use hardcoded fallback

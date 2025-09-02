@@ -55,7 +55,7 @@ export function Footer() {
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}
+                onClick={() => buyToken()}
               >
                 <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
                 Buy $mintedmerch

@@ -113,16 +113,29 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold text-foreground">Shop/Connect</h3>
             <div className="flex flex-col gap-2">
-              {/* TEST BUTTON - EXACT COPY OF WORKING X BUTTON */}
+              {/* TEST DIFFERENT APPROACHES */}
+              <Button
+                variant="outline"
+                size="xs"
+                className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.location.href = 'https://google.com'
+                }}
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                TEST LOCATION.HREF
+              </Button>
               <Button
                 variant="outline"
                 size="xs"
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
                 asChild
               >
-                <a href="https://google.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://google.com" target="_blank" rel="noopener noreferrer external" data-external="true">
                   <ExternalLink className="h-3 w-3 mr-1" />
-                  TEST GOOGLE
+                  TEST WITH ATTRS
                 </a>
               </Button>
               <Button

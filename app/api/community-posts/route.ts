@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+import { get } from '@vercel/edge-config'
 
 interface CommunityPost {
   id: string
@@ -22,15 +22,15 @@ export async function GET() {
     let curatedPosts: CommunityPost[] = []
     
     try {
-      const data = await kv.get('community-posts') as any
+      const data = await get('community-posts') as any
       
       if (data && data.posts) {
         const allPosts = data.posts || []
         // Only show featured posts on the frontend (max 3)
         curatedPosts = allPosts.filter((post: any) => post.featured).slice(0, 3)
-        console.log('✅ Loaded featured posts from KV:', curatedPosts.length, 'of', allPosts.length, 'total')
+        console.log('✅ Loaded featured posts from Edge Config:', curatedPosts.length, 'of', allPosts.length, 'total')
       } else {
-        console.log('⚠️ No data in KV, using fallback posts')
+        console.log('⚠️ No data in Edge Config, using fallback posts')
         // Fallback posts if no data exists
         curatedPosts = [
         {
@@ -71,9 +71,9 @@ export async function GET() {
         }
       ]
     }
-    } catch (kvError) {
-      console.error('Error accessing KV:', kvError)
-      // Use fallback posts if KV fails
+    } catch (edgeConfigError) {
+      console.error('Error accessing Edge Config:', edgeConfigError)
+      // Use fallback posts if Edge Config fails
       curatedPosts = [
         {
           id: "fallback-1",
@@ -94,7 +94,7 @@ export async function GET() {
       success: true,
       posts: curatedPosts,
       count: curatedPosts.length,
-      source: curatedPosts.length > 0 ? 'kv-storage' : 'fallback'
+      source: curatedPosts.length > 0 ? 'edge-config' : 'fallback'
     })
 
   } catch (error) {

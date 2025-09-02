@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+import { get, set } from '@vercel/edge-config'
 
 interface CommunityPost {
   id: string
@@ -43,8 +43,8 @@ export async function POST(request: Request) {
       totalCount: posts.length
     }
 
-    // Save to Vercel KV
-    await kv.set('community-posts', data)
+    // Save to Edge Config
+    await set('community-posts', data)
 
     console.log('✅ Community posts saved:', {
       total: posts.length,
@@ -79,8 +79,8 @@ export async function POST(request: Request) {
 // GET method to fetch posts for admin (same as public API but with admin metadata)
 export async function GET() {
   try {
-    // Get data from Vercel KV
-    const data = await kv.get('community-posts') as any
+    // Get data from Edge Config
+    const data = await get('community-posts') as any
     
     if (data && data.posts) {
       return NextResponse.json({

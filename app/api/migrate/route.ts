@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+import { get, set } from '@vercel/edge-config'
 import fs from 'fs'
 import path from 'path'
 
 export async function POST() {
   try {
-    console.log('🚀 Starting migration from JSON to KV...')
+    console.log('🚀 Starting migration from JSON to Edge Config...')
     
     // Read existing JSON file
     const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
@@ -19,14 +19,14 @@ export async function POST() {
         lastUpdated: data.lastUpdated
       })
       
-      // Migrate to KV
-      await kv.set('community-posts', data)
+      // Migrate to Edge Config
+      await set('community-posts', data)
       
       console.log('✅ Migration completed successfully')
       
       return NextResponse.json({
         success: true,
-        message: 'Data migrated successfully from JSON to KV',
+        message: 'Data migrated successfully from JSON to Edge Config',
         migrated: {
           posts: data.posts?.length || 0,
           featuredCount: data.featuredCount || 0,
@@ -54,8 +54,8 @@ export async function POST() {
 
 export async function GET() {
   try {
-    // Check current KV data
-    const kvData = await kv.get('community-posts') as any
+    // Check current Edge Config data
+    const edgeConfigData = await get('community-posts') as any
     
     // Check if JSON file exists
     const filePath = path.join(process.cwd(), 'data', 'community-posts.json')
@@ -68,17 +68,17 @@ export async function GET() {
     }
     
     return NextResponse.json({
-      kv: {
-        exists: !!kvData,
-        posts: kvData?.posts?.length || 0,
-        lastUpdated: kvData?.lastUpdated
+      edgeConfig: {
+        exists: !!edgeConfigData,
+        posts: edgeConfigData?.posts?.length || 0,
+        lastUpdated: edgeConfigData?.lastUpdated
       },
       json: {
         exists: jsonExists,
         posts: jsonData?.posts?.length || 0,
         lastUpdated: jsonData?.lastUpdated
       },
-      needsMigration: jsonExists && !kvData
+      needsMigration: jsonExists && !edgeConfigData
     })
 
   } catch (error) {

@@ -81,28 +81,16 @@ export async function debugMiniAppContext(): Promise<void> {
 }
 
 /**
- * Opens a URL in external browser - uses SDK in Mini App context, window.open otherwise
+ * Opens a URL in external browser - ALWAYS uses window.open for true external opening
  */
 export async function openExternalUrl(url: string): Promise<void> {
   console.log('🔗 openExternalUrl called with:', url)
   const isMiniApp = await isFarcasterContext()
   console.log('🔗 Mini App context detected:', isMiniApp)
   
-  if (isMiniApp) {
-    try {
-      // In Mini App context, use SDK to open in external browser
-      const { sdk } = await import('@farcaster/miniapp-sdk')
-      console.log('🔗 Attempting to use SDK openUrl...')
-      await sdk.actions.openUrl(url)
-      console.log('✅ Opened external URL via Farcaster SDK:', url)
-      return
-    } catch (error) {
-      console.warn('❌ Failed to use Farcaster SDK for external URL, falling back to window.open:', error)
-    }
-  }
-  
-  // Fallback to window.open for non-Mini App contexts or if SDK fails
-  console.log('🔗 Using window.open fallback...')
+  // ALWAYS use window.open for external URLs - this works in both contexts
+  // The SDK openUrl() opens in Farcaster's internal browser, not external browser
+  console.log('🔗 Using window.open for true external browser opening...')
   window.open(url, '_blank', 'noopener,noreferrer')
   console.log('✅ Opened external URL via window.open:', url)
 }

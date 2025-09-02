@@ -82,6 +82,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Call ready immediately when script loads (before React)
+              (async function() {
+                try {
+                  if (typeof window !== 'undefined') {
+                    // Try to load and call ready as fast as possible
+                    const { sdk } = await import('https://unpkg.com/@farcaster/miniapp-sdk@latest/dist/index.js');
+                    await sdk.actions.ready();
+                    console.log('✅ Farcaster Mini App ready called (pre-React)');
+                  }
+                } catch (error) {
+                  console.log('ℹ️ Pre-React ready call failed, will retry in React');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}
         <Analytics />

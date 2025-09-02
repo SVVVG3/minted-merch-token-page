@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { openExternalUrl } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
 
 export function HeroSection() {
@@ -49,13 +50,13 @@ export function HeroSection() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-lg px-8" onClick={() => window.open('https://mintedmerch.shop/', '_blank', 'noopener,noreferrer')}>
+              <Button size="lg" className="text-lg px-8" onClick={() => openExternalUrl('https://mintedmerch.shop/')}>
                 Shop Merch
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')}>
+              <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
                 <img src="/UniswapLogo.png" alt="Uniswap" className="h-5 w-5" /> Buy $mintedmerch
               </Button>
-              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')}>
+              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openExternalUrl('https://cura.network/mintedmerch?t=hot')}>
                 Join Our Community
               </Button>
             </div>

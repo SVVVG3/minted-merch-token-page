@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     // Farcaster Mini App embed support
     'fc:miniapp': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/embed-logo.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-image.png",
       button: {
-        title: "Where Merch Meets Tokens",
+        title: "Where Tokens Meet Merch",
         action: {
           type: "launch_miniapp",
           url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
@@ -60,9 +60,9 @@ export const metadata: Metadata = {
     // For backward compatibility
     'fc:frame': JSON.stringify({
       version: "1",
-      imageUrl: "https://coin.mintedmerch.shop/embed-logo.png",
+      imageUrl: "https://coin.mintedmerch.shop/embed-image.png",
       button: {
-        title: "Where Merch Meets Tokens",
+        title: "Where Tokens Meet Merch",
         action: {
           type: "launch_frame",
           url: "https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch",
@@ -82,6 +82,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/farcaster.json" />
+      </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}
         <Analytics />

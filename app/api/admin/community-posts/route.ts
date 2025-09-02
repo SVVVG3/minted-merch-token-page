@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { get, set } from '@vercel/edge-config'
+import { get } from '@vercel/edge-config'
 
 interface CommunityPost {
   id: string

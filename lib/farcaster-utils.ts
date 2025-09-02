@@ -81,18 +81,83 @@ export async function debugMiniAppContext(): Promise<void> {
 }
 
 /**
- * Opens a URL in external browser - ALWAYS uses window.open for true external opening
+ * Test different link opening methods - call this from console
+ */
+export async function testLinkMethods(): Promise<void> {
+  const testUrl = 'https://google.com'
+  console.log('🧪 TESTING: Different link opening methods...')
+  
+  // Method 1: window.open
+  console.log('🧪 TEST 1: window.open()')
+  try {
+    const result = window.open(testUrl, '_blank', 'noopener,noreferrer')
+    console.log('🧪 TEST 1 result:', result)
+  } catch (error) {
+    console.log('🧪 TEST 1 error:', error)
+  }
+  
+  // Method 2: SDK openUrl
+  console.log('🧪 TEST 2: sdk.actions.openUrl()')
+  try {
+    const { sdk } = await import('@farcaster/miniapp-sdk')
+    await sdk.actions.openUrl(testUrl)
+    console.log('🧪 TEST 2: SDK openUrl called')
+  } catch (error) {
+    console.log('🧪 TEST 2 error:', error)
+  }
+  
+  // Method 3: Create and click a link element (like the working buttons)
+  console.log('🧪 TEST 3: Create and click <a> element')
+  try {
+    const link = document.createElement('a')
+    link.href = testUrl
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    console.log('🧪 TEST 3: Link element clicked')
+  } catch (error) {
+    console.log('🧪 TEST 3 error:', error)
+  }
+  
+  // Method 4: window.location
+  console.log('🧪 TEST 4: window.location (will navigate current page)')
+  console.log('🧪 TEST 4: Skipping to avoid navigation')
+}
+
+/**
+ * Opens a URL in external browser - uses the same method as working buttons
  */
 export async function openExternalUrl(url: string): Promise<void> {
   console.log('🔗 openExternalUrl called with:', url)
   const isMiniApp = await isFarcasterContext()
   console.log('🔗 Mini App context detected:', isMiniApp)
   
-  // ALWAYS use window.open for external URLs - this works in both contexts
-  // The SDK openUrl() opens in Farcaster's internal browser, not external browser
-  console.log('🔗 Using window.open for true external browser opening...')
-  window.open(url, '_blank', 'noopener,noreferrer')
-  console.log('✅ Opened external URL via window.open:', url)
+  // Use the same method as the working buttons: create and click an <a> element
+  console.log('🔗 Creating and clicking <a> element (same as working buttons)...')
+  try {
+    const link = document.createElement('a')
+    link.href = url
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    
+    // Add to DOM temporarily (some browsers require this)
+    link.style.display = 'none'
+    document.body.appendChild(link)
+    
+    // Click the link
+    link.click()
+    
+    // Clean up
+    document.body.removeChild(link)
+    
+    console.log('✅ Opened external URL via <a> element click:', url)
+  } catch (error) {
+    console.warn('❌ Failed to use <a> element, falling back to window.open:', error)
+    window.open(url, '_blank', 'noopener,noreferrer')
+    console.log('✅ Opened external URL via window.open fallback:', url)
+  }
 }
 
 /**

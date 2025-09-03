@@ -14,13 +14,11 @@ interface TokenData {
   liquidity?: number
 }
 
-interface BasescanResponse {
-  status: string
-  message: string
-  result: Array<{
-    TokenHolderAddress: string
-    TokenHolderQuantity: string
-  }>
+interface TokenDataApiResponse {
+  holders?: number
+  error?: string
+  source: 'basescan-api' | 'fallback'
+  lastUpdated: string
 }
 
 export function TokenInfo() {
@@ -37,38 +35,30 @@ export function TokenInfo() {
 
   const fetchHolderCount = async (): Promise<number | undefined> => {
     try {
-      // For now, return the accurate count from Basescan manually
-      // TODO: Implement proper API integration when CORS/API issues are resolved
-      console.log('Using manual holder count from Basescan: 1041')
-      return 1041 // Current accurate count from https://basescan.org/token/0x774EAeFE73Df7959496Ac92a77279A8D7d690b07
+      console.log('🔍 Fetching holder count from server-side API...')
       
-      // Original API code (commented out due to potential CORS issues):
-      /*
-      const response = await fetch(
-        `https://api.basescan.org/api?module=token&action=tokenholderlist&contractaddress=${contractAddress}&page=1&offset=10000`
-      )
+      // Use our server-side API route to avoid CORS issues
+      const response = await fetch('/api/token-data')
       
       if (!response.ok) {
-        console.error(`Basescan API HTTP error: ${response.status}`)
-        return undefined
+        console.error(`❌ Token data API HTTP error: ${response.status}`)
+        return 1053 // Updated fallback based on current Basescan count
       }
       
-      const data: BasescanResponse = await response.json()
-      console.log('Basescan API response:', data)
+      const data = await response.json()
+      console.log('📊 Token data API response:', data)
       
-      if (data.status === '1' && data.result && Array.isArray(data.result)) {
-        const holderCount = data.result.length
-        console.log(`Fetched ${holderCount} holders from Basescan API`)
-        return holderCount
+      if (data.holders && typeof data.holders === 'number') {
+        console.log(`✅ Fetched ${data.holders} holders from ${data.source} (updated: ${data.lastUpdated})`)
+        return data.holders
       } else {
-        console.error('Basescan API returned error:', data.message || 'Unknown error')
-        return undefined
+        console.error('❌ Token data API returned invalid data:', data)
+        return 1053 // Updated fallback
       }
-      */
       
     } catch (error) {
-      console.error('Error fetching holder count from Basescan:', error)
-      return 1041 // Fallback to accurate manual count
+      console.error('❌ Error fetching holder count from API:', error)
+      return 1053 // Updated fallback based on current Basescan count
     }
   }
 

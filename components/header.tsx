@@ -44,47 +44,59 @@ export function Header() {
         return
       }
     } catch (error) {
-      console.log('Web Share API failed, falling back to manual options')
+      console.log('Web Share API failed, falling back to copy link')
     }
 
-    // Fallback: Create a simple share menu
-    const shareOptions = [
-      {
-        name: 'Copy Link',
-        action: () => {
-          navigator.clipboard.writeText('https://coin.mintedmerch.shop/')
-          alert('Link copied to clipboard!')
-        }
-      },
-      {
-        name: 'Share on X (Twitter)',
-        action: () => {
-          const tweetText = encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀')
-          const tweetUrl = encodeURIComponent('https://coin.mintedmerch.shop/')
-          window.open(`https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`, '_blank')
-        }
-      },
-      {
-        name: 'Share on Farcaster',
-        action: () => {
-          const castText = encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀\n\nhttps://coin.mintedmerch.shop/')
-          window.open(`https://warpcast.com/~/compose?text=${castText}`, '_blank')
-        }
+    // Fallback: Just copy the link - simple and non-intrusive
+    try {
+      await navigator.clipboard.writeText('https://coin.mintedmerch.shop/')
+      // Create a temporary toast-like notification
+      const toast = document.createElement('div')
+      toast.textContent = '✅ Link copied to clipboard!'
+      toast.style.cssText = `
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #10b981;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease-out;
+      `
+      
+      // Add animation keyframes
+      if (!document.querySelector('#toast-styles')) {
+        const style = document.createElement('style')
+        style.id = 'toast-styles'
+        style.textContent = `
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+          }
+        `
+        document.head.appendChild(style)
       }
-    ]
-
-    // Simple prompt-based fallback
-    const choice = prompt(
-      'Choose how to share:\n' +
-      '1 - Copy Link\n' +
-      '2 - Share on X (Twitter)\n' +
-      '3 - Share on Farcaster\n' +
-      '\nEnter 1, 2, or 3:'
-    )
-
-    const selectedOption = shareOptions[parseInt(choice || '0') - 1]
-    if (selectedOption) {
-      selectedOption.action()
+      
+      document.body.appendChild(toast)
+      
+      // Remove toast after 3 seconds
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease-out reverse'
+        setTimeout(() => {
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast)
+          }
+        }, 300)
+      }, 2700)
+    } catch (clipboardError) {
+      console.log('Clipboard failed, opening share URL')
+      // Last resort: open a simple share URL
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀')}&url=${encodeURIComponent('https://coin.mintedmerch.shop/')}`, '_blank')
     }
   }
 
@@ -133,15 +145,19 @@ export function Header() {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          {/* Mobile Share Button and Menu Button */}
+          <div className="md:hidden flex items-center space-x-2">
+            <Button variant="ghost" size="sm" onClick={handleShare} className="px-2">
+              <Share2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -164,10 +180,6 @@ export function Header() {
                 Mini App
               </button>
               <div className="flex flex-col space-y-2 pt-4 px-2">
-                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleShare}>
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
-                </Button>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => openShopUrl()}>
                   Shop Now
                 </Button>

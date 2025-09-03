@@ -129,4 +129,24 @@
   h1, h2, h3, h4, h5, h6, p, span, div, button, a {
     font-family: 'Futura PT', 'Futura', 'Trebuchet MS', Arial, sans-serif;
   }
+  
+  /* Ensure proper cursor behavior for interactive elements */
+  button, 
+  [role="button"], 
+  .cursor-pointer,
+  button:not(:disabled),
+  [onclick]:not(input):not(textarea):not(select) {
+    cursor: pointer !important;
+  }
+  
+  /* Specific cursor styles for different states */
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed !important;
+  }
+  
+  /* Ensure links have pointer cursor */
+  a[href] {
+    cursor: pointer !important;
+  }
 }

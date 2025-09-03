@@ -33,7 +33,7 @@ export function Header() {
   const handleShare = async () => {
     const shareData = {
       title: '$mintedmerch - Where Tokens Meet Merch',
-      text: 'Check out MintedMerch - where tokens unlock exclusive collaborations, custom merch orders, and token-gated discounts!',
+      text: 'Check out $mintedmerch - unlock exclusive collaborations, custom merch orders, token gated discounts, and a growing community!',
       url: 'https://coin.mintedmerch.shop/'
     }
 
@@ -96,7 +96,7 @@ export function Header() {
     } catch (clipboardError) {
       console.log('Clipboard failed, opening share URL')
       // Last resort: open a simple share URL
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀')}&url=${encodeURIComponent('https://coin.mintedmerch.shop/')}`, '_blank')
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Check out $mintedmerch - unlock exclusive collaborations, custom merch orders, token gated discounts, and a growing community! 🚀')}&url=${encodeURIComponent('https://coin.mintedmerch.shop/')}`, '_blank')
     }
   }
 

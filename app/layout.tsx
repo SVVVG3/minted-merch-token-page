@@ -51,7 +51,7 @@ export const metadata: Metadata = {
         action: {
           type: "launch_miniapp",
           url: "https://coin.mintedmerch.shop",
-          name: "MintedMerch",
+          name: "$mintedmerch",
           splashImageUrl: "https://coin.mintedmerch.shop/splash-logo-new.png",
           splashBackgroundColor: "#000000"
         }
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
         action: {
           type: "launch_frame",
           url: "https://coin.mintedmerch.shop",
-          name: "MintedMerch",
+          name: "$mintedmerch",
           splashImageUrl: "https://coin.mintedmerch.shop/splash-logo-new.png",
           splashBackgroundColor: "#000000"
         }

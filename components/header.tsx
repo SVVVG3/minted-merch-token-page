@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Share2 } from "lucide-react"
 import { openExternalUrl, openShopUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
 
 export function Header() {
@@ -28,6 +28,64 @@ export function Header() {
       })
     }
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
+  }
+
+  const handleShare = async () => {
+    const shareData = {
+      title: '$mintedmerch - Where Tokens Meet Merch',
+      text: 'Check out MintedMerch - where tokens unlock exclusive collaborations, custom merch orders, and token-gated discounts!',
+      url: 'https://coin.mintedmerch.shop/'
+    }
+
+    try {
+      // Check if the Web Share API is supported (mobile devices, some desktop browsers)
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData)
+        return
+      }
+    } catch (error) {
+      console.log('Web Share API failed, falling back to manual options')
+    }
+
+    // Fallback: Create a simple share menu
+    const shareOptions = [
+      {
+        name: 'Copy Link',
+        action: () => {
+          navigator.clipboard.writeText('https://coin.mintedmerch.shop/')
+          alert('Link copied to clipboard!')
+        }
+      },
+      {
+        name: 'Share on X (Twitter)',
+        action: () => {
+          const tweetText = encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀')
+          const tweetUrl = encodeURIComponent('https://coin.mintedmerch.shop/')
+          window.open(`https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`, '_blank')
+        }
+      },
+      {
+        name: 'Share on Farcaster',
+        action: () => {
+          const castText = encodeURIComponent('Check out $mintedmerch - Where Tokens Meet Merch! 🚀\n\nhttps://coin.mintedmerch.shop/')
+          window.open(`https://warpcast.com/~/compose?text=${castText}`, '_blank')
+        }
+      }
+    ]
+
+    // Simple prompt-based fallback
+    const choice = prompt(
+      'Choose how to share:\n' +
+      '1 - Copy Link\n' +
+      '2 - Share on X (Twitter)\n' +
+      '3 - Share on Farcaster\n' +
+      '\nEnter 1, 2, or 3:'
+    )
+
+    const selectedOption = shareOptions[parseInt(choice || '0') - 1]
+    if (selectedOption) {
+      selectedOption.action()
+    }
   }
 
   return (
@@ -64,6 +122,9 @@ export function Header() {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
+            <Button variant="ghost" size="sm" onClick={handleShare} className="px-2">
+              <Share2 className="h-4 w-4" />
+            </Button>
             <Button variant="outline" size="sm" onClick={() => openShopUrl()}>
               Shop Now
             </Button>
@@ -103,6 +164,10 @@ export function Header() {
                 Mini App
               </button>
               <div className="flex flex-col space-y-2 pt-4 px-2">
+                <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleShare}>
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => openShopUrl()}>
                   Shop Now
                 </Button>

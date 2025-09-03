@@ -226,7 +226,7 @@ export function TokenInfo() {
             <img src="/mintedmerch-logo.png" alt="$mintedmerch logo" className="w-48 h-12 sm:w-96 sm:h-24 object-cover" />
           </div>
           <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto">
-          The $mintedmerch token powers everything we're building. By aligning onchain utility with real world value, we're crafting a sustainable model where the community, partners, & team all win together.
+          The $mintedmerch token powers everything we're building. By aligning onchain utility with real world value - we're crafting a sustainable model where the community, partners, & team all win together.
           </p>
         </div>
 

@@ -144,13 +144,24 @@ export async function openShopUrl(): Promise<void> {
   
   if (isMiniApp) {
     try {
-      // In Mini App context, open the Farcaster Mini App URL
+      // In Mini App context, use openMiniApp for proper Mini App-to-Mini App navigation
       const { sdk } = await import('@farcaster/miniapp-sdk')
-      await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
-      console.log('✅ Opened shop via Farcaster SDK (Mini App)')
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch'
+      })
+      console.log('✅ Opened shop Mini App via sdk.actions.openMiniApp() - current app will close')
       return
     } catch (error) {
-      console.warn('❌ Failed to use Farcaster SDK for shop URL, falling back to regular shop:', error)
+      console.warn('❌ Failed to use openMiniApp, trying openUrl fallback:', error)
+      try {
+        // Fallback to openUrl if openMiniApp fails
+        const { sdk } = await import('@farcaster/miniapp-sdk')
+        await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
+        console.log('✅ Opened shop via openUrl fallback (Mini App)')
+        return
+      } catch (urlError) {
+        console.warn('❌ Both openMiniApp and openUrl failed, falling back to regular shop:', urlError)
+      }
     }
   }
   
@@ -167,13 +178,24 @@ export async function openMiniAppUrl(): Promise<void> {
   
   if (isMiniApp) {
     try {
-      // In Mini App context, open the URL (might navigate within or open externally)
+      // In Mini App context, use openMiniApp for proper navigation
       const { sdk } = await import('@farcaster/miniapp-sdk')
-      await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
-      console.log('✅ Opened Mini App URL via Farcaster SDK')
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch'
+      })
+      console.log('✅ Opened Mini App via sdk.actions.openMiniApp() - current app will close')
       return
     } catch (error) {
-      console.warn('❌ Failed to use Farcaster SDK for Mini App URL, falling back to window.open:', error)
+      console.warn('❌ Failed to use openMiniApp, trying openUrl fallback:', error)
+      try {
+        // Fallback to openUrl if openMiniApp fails
+        const { sdk } = await import('@farcaster/miniapp-sdk')
+        await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
+        console.log('✅ Opened Mini App via openUrl fallback')
+        return
+      } catch (urlError) {
+        console.warn('❌ Both openMiniApp and openUrl failed, falling back to window.open:', urlError)
+      }
     }
   }
   

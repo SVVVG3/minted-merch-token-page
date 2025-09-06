@@ -30,13 +30,10 @@ function getCacheFilePath(): string {
 
 async function readFileCache(): Promise<CachedHolderData | null> {
   try {
-    const cacheFile = getCacheFilePath()
-    if (fs.existsSync(cacheFile)) {
-      const data = fs.readFileSync(cacheFile, 'utf8')
-      const parsed = JSON.parse(data) as CachedHolderData
-      console.log(`📁 File cache: ${parsed.count} from ${parsed.timestamp}`)
-      return parsed
-    }
+    // In Vercel serverless, file cache doesn't persist
+    // Skip file cache and rely on memory + Edge Config
+    console.log('📁 File cache skipped (Vercel serverless)')
+    return null
   } catch (error) {
     console.log('⚠️ File cache read failed:', error)
   }
@@ -45,16 +42,9 @@ async function readFileCache(): Promise<CachedHolderData | null> {
 
 async function writeFileCache(data: CachedHolderData): Promise<void> {
   try {
-    const cacheFile = getCacheFilePath()
-    const dir = path.dirname(cacheFile)
-    
-    // Create tmp directory if it doesn't exist
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
-    }
-    
-    fs.writeFileSync(cacheFile, JSON.stringify(data, null, 2))
-    console.log(`💾 Cached to file: ${data.count}`)
+    // In Vercel serverless, we can't write to filesystem
+    // Just log that we would cache it - memory cache is working
+    console.log(`💾 Would cache to file: ${data.count} (Vercel serverless - using memory only)`)
   } catch (error) {
     console.log('⚠️ File cache write failed:', error)
   }

@@ -17,7 +17,7 @@ interface TokenData {
 interface TokenDataApiResponse {
   holders?: number
   error?: string
-  source: 'live-update' | 'fallback'
+  source: 'basescan-api' | 'fallback'
   lastUpdated: string
 }
 

@@ -31,7 +31,7 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
       // Use our server-side API route to avoid CORS issues
       // Add cache-busting parameter to ensure fresh data
       const cacheBuster = Date.now()
-      const response = await fetch(`/api/token-data?t=${cacheBuster}`, {
+      const response = await fetch(`/api/token-data-simple?t=${cacheBuster}`, {
         cache: 'no-store'
       })
       

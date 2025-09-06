@@ -19,6 +19,10 @@ interface CachedHolderData {
 // Simple in-memory cache as fallback
 let memoryCache: CachedHolderData | null = null
 
+// Rate limiting to avoid getting blocked
+let lastScrapeTime = 0
+const MIN_SCRAPE_INTERVAL = 30000 // 30 seconds between scrapes
+
 // Helper functions for file-based caching
 function getCacheFilePath(): string {
   return path.join(process.cwd(), 'tmp', 'holder-cache.json')
@@ -88,49 +92,123 @@ export async function GET() {
       console.log(`🧠 Memory cache: ${cachedData.count} from ${cachedData.timestamp}`)
     }
     
-    // Try simple direct fetch
+    // Check rate limiting - don't scrape too frequently
+    const now = Date.now()
+    const timeSinceLastScrape = now - lastScrapeTime
+    let shouldScrape = timeSinceLastScrape > MIN_SCRAPE_INTERVAL
+    
+    if (!shouldScrape && cachedData) {
+      console.log(`⏰ Rate limited (${Math.round((MIN_SCRAPE_INTERVAL - timeSinceLastScrape) / 1000)}s remaining), using cache`)
+    }
+    
+    // Try multiple scraping methods for better reliability
     let holderCount: number | null = null
-    try {
-      console.log('🔄 Direct fetch attempt...')
+    
+    // Method 1: Direct fetch with rotating user agents
+    const userAgents = [
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    ]
+    
+    const randomUA = userAgents[Math.floor(Math.random() * userAgents.length)]
+    
+    // Only scrape if rate limit allows or no cache available
+    if (shouldScrape || !cachedData) {
+      lastScrapeTime = now // Update last scrape time
+      
+      try {
+        console.log('🔄 Method 1: Direct fetch with random UA...')
+      
+      // Random delay to avoid pattern detection
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 2000))
       
       const response = await fetch(`https://basescan.org/token/${contractAddress}`, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Referer': 'https://www.google.com/'
+          'User-Agent': randomUA,
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Cache-Control': 'max-age=0'
         },
         cache: 'no-store',
-        signal: AbortSignal.timeout(15000) // 15 second timeout
+        signal: AbortSignal.timeout(12000)
       })
       
-      console.log(`📊 Response: ${response.status}`)
+      console.log(`📊 Direct response: ${response.status}`)
       
       if (response.ok) {
         const html = await response.text()
         console.log(`📄 HTML length: ${html.length}`)
-        
-        // Simple extraction
-        const patterns = [
-          /Holders?:\s*([0-9,]+)/i,
-          /([0-9,]+)\s*Holders?/i
-        ]
-        
-        for (const pattern of patterns) {
-          const match = html.match(pattern)
-          if (match && match[1]) {
-            const numberStr = match[1].replace(/,/g, '')
-            const parsedNumber = parseInt(numberStr, 10)
-            
-            if (!isNaN(parsedNumber) && parsedNumber > 0 && parsedNumber < 1000000) {
-              holderCount = parsedNumber
-              console.log(`✅ Extracted: ${holderCount}`)
-              break
-            }
-          }
+        holderCount = extractHolderCount(html)
+        if (holderCount) {
+          console.log(`✅ Method 1 success: ${holderCount}`)
         }
       }
     } catch (error) {
-      console.log('⚠️ Direct fetch failed:', error)
+      console.log('⚠️ Method 1 failed:', error)
+    }
+    
+    // Method 2: Proxy fallback if direct fails
+    if (!holderCount) {
+      try {
+        console.log('🌐 Method 2: Proxy fallback...')
+        
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}`
+        
+        const proxyResponse = await fetch(proxyUrl, {
+          headers: {
+            'User-Agent': randomUA,
+            'Accept': 'application/json'
+          },
+          cache: 'no-store',
+          signal: AbortSignal.timeout(15000)
+        })
+        
+        console.log(`📊 Proxy response: ${proxyResponse.status}`)
+        
+        if (proxyResponse.ok) {
+          const proxyData = await proxyResponse.json()
+          if (proxyData.contents) {
+            console.log(`📄 Proxy HTML length: ${proxyData.contents.length}`)
+            holderCount = extractHolderCount(proxyData.contents)
+            if (holderCount) {
+              console.log(`✅ Method 2 success: ${holderCount}`)
+            }
+          }
+        }
+      } catch (error) {
+        console.log('⚠️ Method 2 failed:', error)
+      }
+    } // End of rate limiting block
+    
+    // Helper function for extraction
+    function extractHolderCount(html: string): number | null {
+      const patterns = [
+        /Holders?:\s*([0-9,]+)/i,
+        /([0-9,]+)\s*Holders?/i,
+        /"holders?"[:\s]*"?([0-9,]+)"?/i
+      ]
+      
+      for (const pattern of patterns) {
+        const match = html.match(pattern)
+        if (match && match[1]) {
+          const numberStr = match[1].replace(/,/g, '')
+          const parsedNumber = parseInt(numberStr, 10)
+          
+          if (!isNaN(parsedNumber) && parsedNumber > 0 && parsedNumber < 1000000) {
+            return parsedNumber
+          }
+        }
+      }
+      return null
     }
     
     // Determine final result and cache successful scrapes

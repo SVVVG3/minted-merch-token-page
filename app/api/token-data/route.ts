@@ -106,14 +106,10 @@ export async function GET() {
       }
     }
     
-    // If all methods fail, use the known accurate count
-    if (!holderCount) {
-      console.log('📊 All scraping methods failed, using known accurate count')
-      holderCount = 1410 // Updated fallback count
-    }
-    
     // Helper function to extract holder count from HTML
     function extractHolderCount(html: string): number | null {
+      console.log('🔍 Attempting to extract holder count from HTML (length:', html.length, 'chars)')
+      
       const patterns = [
         /Holders?[:\s]*([0-9,]+)/i,
         /([0-9,]+)\s*Holders?/i,
@@ -122,23 +118,49 @@ export async function GET() {
         /holders['":\s]*([0-9,]+)/i
       ]
       
-      for (const pattern of patterns) {
+      // Log a sample of the HTML to see what we're working with
+      const htmlSample = html.substring(0, 500)
+      console.log('📄 HTML sample:', htmlSample)
+      
+      for (let i = 0; i < patterns.length; i++) {
+        const pattern = patterns[i]
         const match = html.match(pattern)
+        console.log(`🔍 Pattern ${i + 1} (${pattern}):`, match ? `Found "${match[1]}"` : 'No match')
+        
         if (match && match[1]) {
           const numberStr = match[1].replace(/,/g, '') // Remove commas
           const parsedNumber = parseInt(numberStr, 10)
           
+          console.log(`🔢 Parsed number: ${parsedNumber} (valid: ${!isNaN(parsedNumber) && parsedNumber > 0 && parsedNumber < 1000000})`)
+          
           if (!isNaN(parsedNumber) && parsedNumber > 0 && parsedNumber < 1000000) {
+            console.log(`✅ Successfully extracted holder count: ${parsedNumber}`)
             return parsedNumber
           }
         }
       }
+      
+      console.log('❌ No valid holder count found in HTML')
       return null
+    }
+    
+    // Determine source and final holder count
+    let finalHolderCount: number
+    let source: 'web-scraper' | 'fallback'
+    
+    if (holderCount && holderCount > 0) {
+      console.log(`✅ Successfully scraped ${holderCount} holders`)
+      finalHolderCount = holderCount
+      source = 'web-scraper'
+    } else {
+      console.log('📊 All scraping methods failed, using known accurate count')
+      finalHolderCount = 1410 // Updated fallback count
+      source = 'fallback'
     }
       
     const apiResponse = NextResponse.json({
-      holders: holderCount,
-      source: 'web-scraper',
+      holders: finalHolderCount,
+      source: source,
       lastUpdated: new Date().toISOString()
     } as TokenDataResponse)
     

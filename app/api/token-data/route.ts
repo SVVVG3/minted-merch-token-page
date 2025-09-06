@@ -26,7 +26,8 @@ export async function GET() {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         },
-        cache: 'no-store'
+        cache: 'no-store',
+        signal: AbortSignal.timeout(8000) // 8 second timeout
       })
       
       if (proxyResponse.ok) {
@@ -53,7 +54,8 @@ export async function GET() {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
             'X-Requested-With': 'XMLHttpRequest'
           },
-          cache: 'no-store'
+          cache: 'no-store',
+          signal: AbortSignal.timeout(8000) // 8 second timeout
         })
         
         if (corsResponse.ok) {
@@ -73,8 +75,8 @@ export async function GET() {
       try {
         console.log('🔄 Trying direct fetch with stealth headers...')
         
-        // Random delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000))
+        // Small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 500))
         
         const response = await fetch(`https://basescan.org/token/${contractAddress}`, {
           headers: {
@@ -86,7 +88,8 @@ export async function GET() {
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
           },
-          cache: 'no-store'
+          cache: 'no-store',
+          signal: AbortSignal.timeout(8000) // 8 second timeout
         })
         
         if (response.ok) {

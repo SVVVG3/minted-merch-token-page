@@ -70,89 +70,96 @@ export function TokenInfo() {
     const fetchTokenData = async () => {
       try {
         const timestamp = new Date().toISOString()
-        console.log(`🚀 [${timestamp}] Starting API fetch for contract:`, contractAddress)
+        console.log(`🚀 [${timestamp}] Starting parallel API fetch for contract:`, contractAddress)
         
-        // Fetch price data from Dexscreener
-        const dexUrl = `https://api.dexscreener.com/latest/dex/tokens/${contractAddress}`
-        console.log('📡 Fetching from Dexscreener URL:', dexUrl)
+        // Set initial data with fallback values to show something immediately
+        setTokenData({
+          holders: 1053, // Known fallback
+          priceUsd: undefined,
+          priceChange24h: undefined,
+          marketCap: undefined,
+          liquidity: undefined
+        })
+        setLoading(false) // Show data immediately, update as APIs respond
         
-        const dexResponse = await fetch(dexUrl)
-        console.log('📊 Dexscreener response status:', dexResponse.status, dexResponse.statusText)
+        // Create timeout wrapper for API calls
+        const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+          return Promise.race([
+            promise,
+            new Promise<T>((_, reject) => 
+              setTimeout(() => reject(new Error(`Timeout after ${timeoutMs}ms`)), timeoutMs)
+            )
+          ])
+        }
         
-        // Fetch holder count from Basescan
-        const holderCount = await fetchHolderCount()
-        
-        let dexData = {}
-        if (dexResponse.ok) {
-          const data = await dexResponse.json()
-          console.log('✅ Dexscreener API full response:', data) // Debug log
-          if (data.pairs && data.pairs.length > 0) {
-            // Log all pairs to see which one we should use
-            console.log('All pairs found:', data.pairs.map((p: any, i: number) => ({
-              index: i,
-              dexId: p.dexId,
-              chainId: p.chainId,
-              pairAddress: p.pairAddress,
-              priceUsd: p.priceUsd,
-              priceChange24h: p.priceChange?.h24,
-              volume24h: p.volume?.h24,
-              liquidity: p.liquidity?.usd
-            })))
+        // Fetch price data from Dexscreener (fast API, should complete quickly)
+        const fetchDexData = async () => {
+          try {
+            const dexUrl = `https://api.dexscreener.com/latest/dex/tokens/${contractAddress}`
+            console.log('📡 Fetching from Dexscreener URL:', dexUrl)
             
-            // Find the most liquid/active pair (usually the best one to use)
-            const bestPair = data.pairs.reduce((best: any, current: any) => {
-              const bestLiquidity = best.liquidity?.usd || 0
-              const currentLiquidity = current.liquidity?.usd || 0
-              return currentLiquidity > bestLiquidity ? current : best
-            })
+            const dexResponse = await withTimeout(fetch(dexUrl), 10000) // 10 second timeout
+            console.log('📊 Dexscreener response status:', dexResponse.status, dexResponse.statusText)
             
-            console.log('Selected best pair:', {
-              dexId: bestPair.dexId,
-              chainId: bestPair.chainId,
-              pairAddress: bestPair.pairAddress,
-              priceUsd: bestPair.priceUsd,
-              priceChange: bestPair.priceChange,
-              priceChange24h: bestPair.priceChange?.h24,
-              rawPriceChange24h: bestPair.priceChange?.h24,
-              typeOfPriceChange: typeof bestPair.priceChange?.h24,
-              volume24h: bestPair.volume?.h24,
-              liquidity: bestPair.liquidity?.usd,
-              fdv: bestPair.fdv,
-              marketCap: bestPair.marketCap
-            })
-            
-            dexData = {
-              priceUsd: bestPair.priceUsd || undefined,
-              priceChange24h: bestPair.priceChange?.h24 !== undefined && bestPair.priceChange?.h24 !== null ? bestPair.priceChange.h24 : undefined,
-              marketCap: typeof bestPair.fdv === 'number' ? bestPair.fdv : (typeof bestPair.marketCap === 'number' ? bestPair.marketCap : undefined),
-              liquidity: typeof bestPair.liquidity?.usd === 'number' ? bestPair.liquidity.usd : undefined,
+            if (dexResponse.ok) {
+              const data = await dexResponse.json()
+              console.log('✅ Dexscreener API response received')
+              
+              if (data.pairs && data.pairs.length > 0) {
+                // Find the most liquid/active pair
+                const bestPair = data.pairs.reduce((best: any, current: any) => {
+                  const bestLiquidity = best.liquidity?.usd || 0
+                  const currentLiquidity = current.liquidity?.usd || 0
+                  return currentLiquidity > bestLiquidity ? current : best
+                })
+                
+                const dexData = {
+                  priceUsd: bestPair.priceUsd || undefined,
+                  priceChange24h: bestPair.priceChange?.h24 !== undefined && bestPair.priceChange?.h24 !== null ? bestPair.priceChange.h24 : undefined,
+                  marketCap: typeof bestPair.fdv === 'number' ? bestPair.fdv : (typeof bestPair.marketCap === 'number' ? bestPair.marketCap : undefined),
+                  liquidity: typeof bestPair.liquidity?.usd === 'number' ? bestPair.liquidity.usd : undefined,
+                }
+                
+                console.log('📊 Updating token data with Dexscreener info')
+                setTokenData(prevData => ({ ...prevData, ...dexData }))
+              }
             }
-            console.log('Final processed dex data:', dexData) // Debug log
-          } else {
-            console.log('No pairs found in Dexscreener response')
+          } catch (error) {
+            console.error('❌ Dexscreener API error:', error)
           }
-        } else {
-          console.error('Dexscreener API request failed:', dexResponse.status, dexResponse.statusText)
         }
         
-        // Combine data from both APIs
-        const combinedData = {
-          ...dexData,
-          holders: holderCount
+        // Fetch holder count (slower, may take time or fail)
+        const fetchHolderData = async () => {
+          try {
+            console.log('🔍 Fetching holder count...')
+            const holderCount = await withTimeout(fetchHolderCount(), 15000) // 15 second timeout
+            
+            if (holderCount && holderCount !== 1053) { // Only update if we got new data
+              console.log('📊 Updating holder count:', holderCount)
+              setTokenData(prevData => ({ ...prevData, holders: holderCount }))
+            }
+          } catch (error) {
+            console.error('❌ Holder count fetch error:', error)
+            // Keep the fallback value (1053) that was set initially
+          }
         }
         
-        console.log('Setting token data:', combinedData) // Debug log
-        setTokenData(combinedData)
+        // Run both API calls in parallel
+        await Promise.allSettled([fetchDexData(), fetchHolderData()])
+        
+        console.log('🏁 All API calls completed')
         
       } catch (error) {
-        console.error('❌ Error fetching token data:', error)
-        console.error('Error details:', {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          stack: error instanceof Error ? error.stack : undefined
+        console.error('❌ Error in fetchTokenData:', error)
+        // Ensure we always have some data showing
+        setTokenData({
+          holders: 1053,
+          priceUsd: undefined,
+          priceChange24h: undefined,
+          marketCap: undefined,
+          liquidity: undefined
         })
-        setTokenData({}) // Set empty object on error
-      } finally {
-        console.log('🏁 API fetch completed, setting loading to false')
         setLoading(false)
       }
     }

@@ -3,10 +3,7 @@ import { NextResponse } from 'next/server'
 interface BasescanResponse {
   status: string
   message: string
-  result: Array<{
-    TokenHolderAddress: string
-    TokenHolderQuantity: string
-  }>
+  result: string // tokenholdercount returns a string number, not an array
 }
 
 interface TokenDataResponse {
@@ -31,8 +28,8 @@ export async function GET() {
       throw new Error('API key required')
     }
     
-    // Fetch from Basescan API with your API key
-    const basescanUrl = `https://api.basescan.org/api?module=token&action=tokenholderlist&contractaddress=${contractAddress}&page=1&offset=10000&apikey=${apiKey}`
+    // Fetch from Basescan API v2 with tokenholdercount action (as per docs)
+    const basescanUrl = `https://api.basescan.org/v2/api?chainid=8453&module=token&action=tokenholdercount&contractaddress=${contractAddress}&apikey=${apiKey}`
     
     console.log('📡 Making Basescan API request...')
     
@@ -50,9 +47,10 @@ export async function GET() {
     
     const data: BasescanResponse = await response.json()
     console.log('📊 Basescan API response status:', data.status, 'message:', data.message)
+    console.log('📊 Basescan API full response:', JSON.stringify(data, null, 2))
     
-    if (data.status === '1' && data.result && Array.isArray(data.result)) {
-      const holderCount = data.result.length
+    if (data.status === '1' && data.result) {
+      const holderCount = parseInt(data.result, 10)
       console.log(`✅ Successfully fetched ${holderCount} holders from Basescan API`)
       
       const apiResponse = NextResponse.json({

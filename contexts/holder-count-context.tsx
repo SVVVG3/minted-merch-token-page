@@ -43,6 +43,13 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
       const data = await response.json()
       console.log('📊 [CONTEXT] Token data API response:', data)
       
+      // Log server-side details if available
+      if (data.source === 'fallback') {
+        console.log('⚠️ [CONTEXT] Scraping failed - check Vercel server logs for detailed scraping attempts')
+      } else {
+        console.log('✅ [CONTEXT] Successfully got live data from web scraping!')
+      }
+      
       if (data.holders && typeof data.holders === 'number') {
         console.log(`✅ [CONTEXT] Fetched ${data.holders} holders from ${data.source} (updated: ${data.lastUpdated})`)
         setSource(data.source)

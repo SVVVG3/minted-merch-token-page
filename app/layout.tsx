@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/next'
+import { HolderCountProvider } from '@/contexts/holder-count-context'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -86,7 +87,9 @@ export default function RootLayout({
         <link rel="manifest" href="/.well-known/farcaster.json" />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
+        <HolderCountProvider>
+          {children}
+        </HolderCountProvider>
         <Analytics />
       </body>
     </html>

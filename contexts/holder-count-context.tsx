@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 interface TokenDataApiResponse {
   holders?: number
@@ -9,14 +9,23 @@ interface TokenDataApiResponse {
   lastUpdated: string
 }
 
-export function useHolderCount() {
+interface HolderCountContextType {
+  holderCount: number
+  formattedHolderCount: string
+  isLoading: boolean
+  source: 'web-scraper' | 'fallback'
+}
+
+const HolderCountContext = createContext<HolderCountContextType | undefined>(undefined)
+
+export function HolderCountProvider({ children }: { children: ReactNode }) {
   const [holderCount, setHolderCount] = useState<number>(1410) // Default fallback
   const [isLoading, setIsLoading] = useState(true)
   const [source, setSource] = useState<'web-scraper' | 'fallback'>('fallback')
 
   const fetchHolderCount = async (): Promise<number | undefined> => {
     try {
-      console.log('🔍 Fetching holder count from server-side API...')
+      console.log('🔍 [CONTEXT] Fetching holder count from server-side API...')
       
       // Use our server-side API route to avoid CORS issues
       // Add cache-busting parameter to ensure fresh data
@@ -26,24 +35,24 @@ export function useHolderCount() {
       })
       
       if (!response.ok) {
-        console.error(`❌ Token data API HTTP error: ${response.status}`)
+        console.error(`❌ [CONTEXT] Token data API HTTP error: ${response.status}`)
         return 1410 // Updated fallback
       }
       
       const data = await response.json()
-      console.log('📊 Token data API response:', data)
+      console.log('📊 [CONTEXT] Token data API response:', data)
       
       if (data.holders && typeof data.holders === 'number') {
-        console.log(`✅ Fetched ${data.holders} holders from ${data.source} (updated: ${data.lastUpdated})`)
+        console.log(`✅ [CONTEXT] Fetched ${data.holders} holders from ${data.source} (updated: ${data.lastUpdated})`)
         setSource(data.source)
         return data.holders
       } else {
-        console.error('❌ Token data API returned invalid data:', data)
+        console.error('❌ [CONTEXT] Token data API returned invalid data:', data)
         return 1410 // Updated fallback
       }
       
     } catch (error) {
-      console.error('❌ Error fetching holder count from API:', error)
+      console.error('❌ [CONTEXT] Error fetching holder count from API:', error)
       return 1410 // Updated fallback
     }
   }
@@ -65,11 +74,11 @@ export function useHolderCount() {
         const count = await withTimeout(fetchHolderCount(), 15000) // 15 second timeout
         
         if (count && typeof count === 'number' && count > 0) {
-          console.log('📊 Updating shared holder count:', count)
+          console.log('📊 [CONTEXT] Updating shared holder count:', count)
           setHolderCount(count)
         }
       } catch (error) {
-        console.error('❌ Holder count fetch error:', error)
+        console.error('❌ [CONTEXT] Holder count fetch error:', error)
         // Keep the fallback value (1410) that was set initially
       } finally {
         setIsLoading(false)
@@ -77,17 +86,18 @@ export function useHolderCount() {
     }
 
     // Initial fetch
+    console.log('🚀 [CONTEXT] Starting holder count context...')
     fetchData()
     
     // Refresh data every 5 minutes
-    console.log('⏰ Setting up 5-minute refresh interval for shared holder count')
+    console.log('⏰ [CONTEXT] Setting up 5-minute refresh interval for shared holder count')
     const interval = setInterval(() => {
-      console.log('🔄 Interval triggered - fetching fresh holder count...')
+      console.log('🔄 [CONTEXT] Interval triggered - fetching fresh holder count...')
       fetchData()
     }, 300000)
     
     return () => {
-      console.log('🛑 Cleaning up shared holder count refresh interval')
+      console.log('🛑 [CONTEXT] Cleaning up shared holder count refresh interval')
       clearInterval(interval)
     }
   }, [])
@@ -111,10 +121,24 @@ export function useHolderCount() {
     return `${kValue.toFixed(1)}K+`
   }
 
-  return {
+  const value: HolderCountContextType = {
     holderCount,
     formattedHolderCount: formatHolderCount(holderCount),
     isLoading,
     source
   }
+
+  return (
+    <HolderCountContext.Provider value={value}>
+      {children}
+    </HolderCountContext.Provider>
+  )
+}
+
+export function useHolderCount(): HolderCountContextType {
+  const context = useContext(HolderCountContext)
+  if (context === undefined) {
+    throw new Error('useHolderCount must be used within a HolderCountProvider')
+  }
+  return context
 }

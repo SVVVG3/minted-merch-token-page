@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { openExternalUrl, openShopUrl, buyToken, openCommunityUrl } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
-import { useHolderCount } from "@/hooks/use-holder-count"
+import { useHolderCount } from "@/contexts/holder-count-context"
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)

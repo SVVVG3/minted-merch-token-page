@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Copy, ExternalLink, TrendingUp, Users, Zap, DollarSign, UserCheck, BarChart3, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 import { openExternalUrl } from "@/lib/farcaster-utils"
-import { useHolderCount } from "@/hooks/use-holder-count"
+import { useHolderCount } from "@/contexts/holder-count-context"
 
 interface TokenData {
   priceUsd?: string

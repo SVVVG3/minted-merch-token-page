@@ -17,7 +17,7 @@ interface TokenData {
 interface TokenDataApiResponse {
   holders?: number
   error?: string
-  source: 'basescan-api' | 'fallback'
+  source: 'blockchain-rpc' | 'fallback'
   lastUpdated: string
 }
 
@@ -160,12 +160,12 @@ export function TokenInfo() {
     // Initial fetch
     fetchTokenData()
     
-    // Refresh data every 30 seconds for more frequent updates
-    console.log('⏰ Setting up 30-second refresh interval for token data')
+    // Refresh data every 5 minutes (blockchain RPC is more reliable than APIs)
+    console.log('⏰ Setting up 5-minute refresh interval for token data')
     const interval = setInterval(() => {
       console.log('🔄 Interval triggered - fetching fresh token data...')
       fetchTokenData()
-    }, 30000)
+    }, 300000)
     
     return () => {
       console.log('🛑 Cleaning up token data refresh interval')

@@ -19,6 +19,7 @@ interface HolderCountContextType {
 const HolderCountContext = createContext<HolderCountContextType | undefined>(undefined)
 
 export function HolderCountProvider({ children }: { children: ReactNode }) {
+  console.log('🏗️ [CONTEXT] HolderCountProvider initialized')
   const [holderCount, setHolderCount] = useState<number>(1410) // Default fallback
   const [isLoading, setIsLoading] = useState(true)
   const [source, setSource] = useState<'web-scraper' | 'fallback'>('fallback')
@@ -74,8 +75,10 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
         const count = await withTimeout(fetchHolderCount(), 15000) // 15 second timeout
         
         if (count && typeof count === 'number' && count > 0) {
-          console.log('📊 [CONTEXT] Updating shared holder count:', count)
+          console.log('📊 [CONTEXT] Updating shared holder count from', holderCount, 'to', count)
           setHolderCount(count)
+        } else {
+          console.log('⚠️ [CONTEXT] Invalid count received:', count, 'keeping current:', holderCount)
         }
       } catch (error) {
         console.error('❌ [CONTEXT] Holder count fetch error:', error)
@@ -136,6 +139,7 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
 }
 
 export function useHolderCount(): HolderCountContextType {
+  console.log('🎯 [CONTEXT] useHolderCount hook called')
   const context = useContext(HolderCountContext)
   if (context === undefined) {
     throw new Error('useHolderCount must be used within a HolderCountProvider')

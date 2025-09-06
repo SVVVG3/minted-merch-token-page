@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 interface TokenDataApiResponse {
   holders?: number
   error?: string
-  source: 'web-scraper' | 'fallback'
+  source: 'web-scraper' | 'cached' | 'fallback'
   lastUpdated: string
 }
 
@@ -13,7 +13,7 @@ interface HolderCountContextType {
   holderCount: number
   formattedHolderCount: string
   isLoading: boolean
-  source: 'web-scraper' | 'fallback'
+  source: 'web-scraper' | 'cached' | 'fallback'
 }
 
 const HolderCountContext = createContext<HolderCountContextType | undefined>(undefined)
@@ -22,7 +22,7 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
   console.log('🏗️ [CONTEXT] HolderCountProvider initialized')
   const [holderCount, setHolderCount] = useState<number>(1410) // Default fallback
   const [isLoading, setIsLoading] = useState(true)
-  const [source, setSource] = useState<'web-scraper' | 'fallback'>('fallback')
+  const [source, setSource] = useState<'web-scraper' | 'cached' | 'fallback'>('fallback')
 
   const fetchHolderCount = async (): Promise<number | undefined> => {
     try {
@@ -44,10 +44,12 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
       console.log('📊 [CONTEXT] Token data API response:', data)
       
       // Log server-side details if available
-      if (data.source === 'fallback') {
-        console.log('⚠️ [CONTEXT] Scraping failed - check Vercel server logs for detailed scraping attempts')
-      } else {
+      if (data.source === 'web-scraper') {
         console.log('✅ [CONTEXT] Successfully got live data from web scraping!')
+      } else if (data.source === 'cached') {
+        console.log('💾 [CONTEXT] Using cached data from previous successful scrape')
+      } else {
+        console.log('⚠️ [CONTEXT] Using hardcoded fallback - check Vercel server logs for scraping attempts')
       }
       
       if (data.holders && typeof data.holders === 'number') {

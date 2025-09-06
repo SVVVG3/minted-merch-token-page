@@ -1,19 +1,39 @@
 import { NextResponse } from 'next/server'
-
+import { kv } from '@vercel/kv'
 
 interface TokenDataResponse {
   holders?: number
   error?: string
-  source: 'web-scraper' | 'fallback'
+  source: 'web-scraper' | 'cached' | 'fallback'
   lastUpdated: string
+}
+
+interface CachedHolderData {
+  count: number
+  timestamp: string
+  source: 'web-scraper'
 }
 
 export async function GET() {
   const contractAddress = "0x774EAeFE73Df7959496Ac92a77279A8D7d690b07"
+  const cacheKey = `holder-count-${contractAddress}`
   
   try {
     const timestamp = new Date().toISOString()
     console.log(`🔍 [${timestamp}] Getting holder count via multiple methods...`)
+    
+    // First, get the cached value to use as smart fallback
+    let cachedData: CachedHolderData | null = null
+    try {
+      cachedData = await kv.get<CachedHolderData>(cacheKey)
+      if (cachedData) {
+        console.log(`💾 Found cached holder count: ${cachedData.count} from ${cachedData.timestamp}`)
+      } else {
+        console.log('💾 No cached holder count found')
+      }
+    } catch (error) {
+      console.log('⚠️ Failed to read from cache:', error)
+    }
     
     let holderCount: number | null = null
     
@@ -155,15 +175,32 @@ export async function GET() {
     
     // Determine source and final holder count
     let finalHolderCount: number
-    let source: 'web-scraper' | 'fallback'
+    let source: 'web-scraper' | 'cached' | 'fallback'
     
     if (holderCount && holderCount > 0) {
       console.log(`✅ Successfully scraped ${holderCount} holders`)
       finalHolderCount = holderCount
       source = 'web-scraper'
+      
+      // Cache the successful result
+      try {
+        const cacheData: CachedHolderData = {
+          count: holderCount,
+          timestamp: new Date().toISOString(),
+          source: 'web-scraper'
+        }
+        await kv.set(cacheKey, cacheData)
+        console.log(`💾 Cached new holder count: ${holderCount}`)
+      } catch (error) {
+        console.log('⚠️ Failed to cache holder count:', error)
+      }
+    } else if (cachedData && cachedData.count > 0) {
+      console.log(`📊 Scraping failed, using cached count: ${cachedData.count} from ${cachedData.timestamp}`)
+      finalHolderCount = cachedData.count
+      source = 'cached'
     } else {
-      console.log('📊 All scraping methods failed, using known accurate count')
-      finalHolderCount = 1410 // Updated fallback count
+      console.log('📊 No scraping or cached data available, using hardcoded fallback')
+      finalHolderCount = 1410 // Final fallback
       source = 'fallback'
     }
       

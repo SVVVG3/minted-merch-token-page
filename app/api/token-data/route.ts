@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 interface TokenDataResponse {
   holders?: number
   error?: string
-  source: 'covalent-api' | 'fallback'
+  source: 'web-scraper' | 'fallback'
   lastUpdated: string
 }
 
@@ -13,55 +13,71 @@ export async function GET() {
   
   try {
     const timestamp = new Date().toISOString()
-    console.log(`🔍 [${timestamp}] Fetching holder count from Covalent API...`)
+    console.log(`🔍 [${timestamp}] Scraping holder count from Basescan website...`)
     
-    // Get Covalent API key from environment variables
-    const covalentApiKey = process.env.COVALENT_API_KEY
+    // Basescan token page URL
+    const basescanUrl = `https://basescan.org/token/${contractAddress}`
     
-    if (!covalentApiKey) {
-      console.warn('⚠️ COVALENT_API_KEY not found in environment variables')
-      throw new Error('Covalent API key required')
-    }
+    console.log('🌐 Fetching Basescan page HTML...')
     
-    // Covalent API endpoint for Base network (chain ID: 8453)
-    // Get token holders for the contract
-    const covalentUrl = `https://api.covalenthq.com/v1/base-mainnet/tokens/${contractAddress}/token_holders_v2/?page-size=1`
-    
-    console.log('📡 Making Covalent API request...')
-    
-    const response = await fetch(covalentUrl, {
+    // Fetch the HTML content from Basescan
+    const response = await fetch(basescanUrl, {
       headers: {
-        'Authorization': `Bearer ${covalentApiKey}`,
-        'Content-Type': 'application/json'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1'
       },
       cache: 'no-store'
     })
     
     if (!response.ok) {
-      console.error(`❌ Covalent API HTTP error: ${response.status} ${response.statusText}`)
+      console.error(`❌ Basescan HTTP error: ${response.status} ${response.statusText}`)
       throw new Error(`HTTP ${response.status}: ${response.statusText}`)
     }
     
-    const data = await response.json()
-    console.log('📊 Covalent API response:', JSON.stringify(data, null, 2))
+    const html = await response.text()
+    console.log('📄 Successfully fetched Basescan page HTML')
     
+    // Parse the HTML to extract holder count
+    // Look for patterns like "Holders: 1,053" or similar
     let holderCount: number
     
-    if (data.data && data.data.pagination && data.data.pagination.total_count !== undefined) {
-      holderCount = data.data.pagination.total_count
-      console.log(`✅ Successfully fetched ${holderCount} holders from Covalent API`)
-    } else if (data.data && data.data.items && Array.isArray(data.data.items)) {
-      // Fallback: if no pagination info, use items length (though this would be incomplete)
-      holderCount = data.data.items.length
-      console.log(`⚠️ Using sample count from Covalent: ${holderCount} holders (may be incomplete)`)
-    } else {
-      console.error('❌ Unexpected Covalent API response format')
-      throw new Error('Invalid API response format')
+    // Try multiple regex patterns to find holder count
+    const patterns = [
+      /Holders?[:\s]*([0-9,]+)/i,
+      /([0-9,]+)\s*Holders?/i,
+      /"holders?"[:\s]*"?([0-9,]+)"?/i,
+      /holder[s]?[^0-9]*([0-9,]+)/i
+    ]
+    
+    let found = false
+    for (const pattern of patterns) {
+      const match = html.match(pattern)
+      if (match && match[1]) {
+        const numberStr = match[1].replace(/,/g, '') // Remove commas
+        const parsedNumber = parseInt(numberStr, 10)
+        
+        if (!isNaN(parsedNumber) && parsedNumber > 0) {
+          holderCount = parsedNumber
+          console.log(`✅ Successfully scraped ${holderCount} holders from Basescan (pattern: ${pattern})`)
+          found = true
+          break
+        }
+      }
+    }
+    
+    if (!found) {
+      console.error('❌ Could not find holder count in HTML')
+      console.log('📄 HTML sample:', html.substring(0, 1000) + '...')
+      throw new Error('Failed to parse holder count from HTML')
     }
       
     const apiResponse = NextResponse.json({
       holders: holderCount,
-      source: 'covalent-api',
+      source: 'web-scraper',
       lastUpdated: new Date().toISOString()
     } as TokenDataResponse)
     
@@ -73,7 +89,7 @@ export async function GET() {
     return apiResponse
     
   } catch (error) {
-    console.error('❌ Error fetching from Covalent API:', error)
+    console.error('❌ Error scraping holder count from Basescan:', error)
     
     // Fallback to known accurate count
     console.log('📊 Using fallback holder count')

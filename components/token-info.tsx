@@ -17,7 +17,7 @@ interface TokenData {
 interface TokenDataApiResponse {
   holders?: number
   error?: string
-  source: 'covalent-api' | 'fallback'
+  source: 'web-scraper' | 'fallback'
   lastUpdated: string
 }
 

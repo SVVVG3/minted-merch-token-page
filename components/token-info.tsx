@@ -38,7 +38,11 @@ export function TokenInfo() {
       console.log('🔍 Fetching holder count from server-side API...')
       
       // Use our server-side API route to avoid CORS issues
-      const response = await fetch('/api/token-data')
+      // Add cache-busting parameter to ensure fresh data
+      const cacheBuster = Date.now()
+      const response = await fetch(`/api/token-data?t=${cacheBuster}`, {
+        cache: 'no-store'
+      })
       
       if (!response.ok) {
         console.error(`❌ Token data API HTTP error: ${response.status}`)
@@ -65,7 +69,8 @@ export function TokenInfo() {
   useEffect(() => {
     const fetchTokenData = async () => {
       try {
-        console.log('🚀 Starting API fetch for contract:', contractAddress)
+        const timestamp = new Date().toISOString()
+        console.log(`🚀 [${timestamp}] Starting API fetch for contract:`, contractAddress)
         
         // Fetch price data from Dexscreener
         const dexUrl = `https://api.dexscreener.com/latest/dex/tokens/${contractAddress}`
@@ -152,11 +157,20 @@ export function TokenInfo() {
       }
     }
 
+    // Initial fetch
     fetchTokenData()
-    // Refresh data every 60 seconds (less frequent due to API rate limits)
-    const interval = setInterval(fetchTokenData, 60000)
     
-    return () => clearInterval(interval)
+    // Refresh data every 30 seconds for more frequent updates
+    console.log('⏰ Setting up 30-second refresh interval for token data')
+    const interval = setInterval(() => {
+      console.log('🔄 Interval triggered - fetching fresh token data...')
+      fetchTokenData()
+    }, 30000)
+    
+    return () => {
+      console.log('🛑 Cleaning up token data refresh interval')
+      clearInterval(interval)
+    }
   }, [contractAddress])
 
   const formatPrice = (price: string | undefined) => {

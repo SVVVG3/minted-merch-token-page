@@ -20,7 +20,8 @@ export async function GET() {
   const contractAddress = "0x774EAeFE73Df7959496Ac92a77279A8D7d690b07"
   
   try {
-    console.log('🔍 Fetching holder count from Basescan API...')
+    const timestamp = new Date().toISOString()
+    console.log(`🔍 [${timestamp}] Fetching holder count from Basescan API...`)
     
     // Fetch from Basescan API server-side to avoid CORS issues
     const basescanUrl = `https://api.basescan.org/api?module=token&action=tokenholderlist&contractaddress=${contractAddress}&page=1&offset=10000`
@@ -28,7 +29,9 @@ export async function GET() {
     const response = await fetch(basescanUrl, {
       headers: {
         'User-Agent': 'MintedMerch-TokenSite/1.0'
-      }
+      },
+      // Disable caching to ensure fresh data
+      cache: 'no-store'
     })
     
     if (!response.ok) {
@@ -48,28 +51,49 @@ export async function GET() {
       const holderCount = data.result.length
       console.log(`✅ Successfully fetched ${holderCount} holders from Basescan API`)
       
-      return NextResponse.json({
+      const response = NextResponse.json({
         holders: holderCount,
         source: 'basescan-api',
         lastUpdated: new Date().toISOString()
       } as TokenDataResponse)
+      
+      // Set cache control headers to prevent caching
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+      
+      return response
     } else {
       console.error('❌ Basescan API returned error:', data.message || 'Unknown error')
-      return NextResponse.json({
+      const response = NextResponse.json({
         holders: 1053, // Updated fallback
         error: data.message || 'API returned invalid data',
         source: 'fallback',
         lastUpdated: new Date().toISOString()
       } as TokenDataResponse)
+      
+      // Set cache control headers for fallback too
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+      
+      return response
     }
     
   } catch (error) {
     console.error('❌ Error fetching from Basescan API:', error)
-    return NextResponse.json({
+    const response = NextResponse.json({
       holders: 1053, // Updated fallback based on current Basescan count
       error: error instanceof Error ? error.message : 'Unknown error',
       source: 'fallback',
       lastUpdated: new Date().toISOString()
     } as TokenDataResponse)
+    
+    // Set cache control headers for error case too
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    return response
   }
 }

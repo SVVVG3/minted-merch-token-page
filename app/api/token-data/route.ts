@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+// import { kv } from '@vercel/kv' // Temporarily disabled until KV is set up
 
 interface TokenDataResponse {
   holders?: number
@@ -25,12 +25,9 @@ export async function GET() {
     // First, get the cached value to use as smart fallback
     let cachedData: CachedHolderData | null = null
     try {
-      cachedData = await kv.get<CachedHolderData>(cacheKey)
-      if (cachedData) {
-        console.log(`💾 Found cached holder count: ${cachedData.count} from ${cachedData.timestamp}`)
-      } else {
-        console.log('💾 No cached holder count found')
-      }
+      // Simple in-memory cache for now (will be replaced with KV when set up)
+      // For now, we'll skip caching and just use the hardcoded fallback
+      console.log('💾 KV not configured yet, skipping cache read')
     } catch (error) {
       console.log('⚠️ Failed to read from cache:', error)
     }
@@ -182,15 +179,16 @@ export async function GET() {
       finalHolderCount = holderCount
       source = 'web-scraper'
       
-      // Cache the successful result
+      // Cache the successful result (disabled until KV is set up)
       try {
-        const cacheData: CachedHolderData = {
-          count: holderCount,
-          timestamp: new Date().toISOString(),
-          source: 'web-scraper'
-        }
-        await kv.set(cacheKey, cacheData)
-        console.log(`💾 Cached new holder count: ${holderCount}`)
+        console.log(`💾 Would cache holder count: ${holderCount} (KV not configured yet)`)
+        // TODO: Enable when KV environment variables are set up
+        // const cacheData: CachedHolderData = {
+        //   count: holderCount,
+        //   timestamp: new Date().toISOString(),
+        //   source: 'web-scraper'
+        // }
+        // await kv.set(cacheKey, cacheData)
       } catch (error) {
         console.log('⚠️ Failed to cache holder count:', error)
       }

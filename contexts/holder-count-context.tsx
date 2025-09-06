@@ -20,7 +20,7 @@ const HolderCountContext = createContext<HolderCountContextType | undefined>(und
 
 export function HolderCountProvider({ children }: { children: ReactNode }) {
   console.log('🏗️ [CONTEXT] HolderCountProvider initialized')
-  const [holderCount, setHolderCount] = useState<number>(1410) // Default fallback
+  const [holderCount, setHolderCount] = useState<number>(1427) // Updated to match bootstrap cache
   const [isLoading, setIsLoading] = useState(true)
   const [source, setSource] = useState<'web-scraper' | 'cached' | 'fallback'>('fallback')
 
@@ -37,7 +37,7 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
       
       if (!response.ok) {
         console.error(`❌ [CONTEXT] Token data API HTTP error: ${response.status}`)
-        return 1410 // Updated fallback
+        return 1427 // Updated fallback
       }
       
       const data = await response.json()
@@ -58,12 +58,12 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
         return data.holders
       } else {
         console.error('❌ [CONTEXT] Token data API returned invalid data:', data)
-        return 1410 // Updated fallback
+        return 1427 // Updated fallback
       }
       
     } catch (error) {
       console.error('❌ [CONTEXT] Error fetching holder count from API:', error)
-      return 1410 // Updated fallback
+      return 1427 // Updated fallback
     }
   }
 

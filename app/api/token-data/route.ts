@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-// import { kv } from '@vercel/kv' // Temporarily disabled until KV is set up
+import { get } from '@vercel/edge-config'
 
 interface TokenDataResponse {
   holders?: number
@@ -25,11 +25,14 @@ export async function GET() {
     // First, get the cached value to use as smart fallback
     let cachedData: CachedHolderData | null = null
     try {
-      // Simple in-memory cache for now (will be replaced with KV when set up)
-      // For now, we'll skip caching and just use the hardcoded fallback
-      console.log('💾 KV not configured yet, skipping cache read')
+      cachedData = await get<CachedHolderData>(cacheKey)
+      if (cachedData) {
+        console.log(`💾 Found cached holder count: ${cachedData.count} from ${cachedData.timestamp}`)
+      } else {
+        console.log('💾 No cached holder count found in Edge Config')
+      }
     } catch (error) {
-      console.log('⚠️ Failed to read from cache:', error)
+      console.log('⚠️ Failed to read from Edge Config cache:', error)
     }
     
     let holderCount: number | null = null
@@ -179,19 +182,12 @@ export async function GET() {
       finalHolderCount = holderCount
       source = 'web-scraper'
       
-      // Cache the successful result (disabled until KV is set up)
-      try {
-        console.log(`💾 Would cache holder count: ${holderCount} (KV not configured yet)`)
-        // TODO: Enable when KV environment variables are set up
-        // const cacheData: CachedHolderData = {
-        //   count: holderCount,
-        //   timestamp: new Date().toISOString(),
-        //   source: 'web-scraper'
-        // }
-        // await kv.set(cacheKey, cacheData)
-      } catch (error) {
-        console.log('⚠️ Failed to cache holder count:', error)
-      }
+      // Note: Edge Config is read-only from API routes
+      // We'll update it manually when needed or create a separate update mechanism
+      console.log(`💾 Successfully scraped ${holderCount} holders (Edge Config update needed manually)`)
+      
+      // TODO: Consider implementing a webhook or manual update process for Edge Config
+      // Edge Config is designed for configuration data that changes infrequently
     } else if (cachedData && cachedData.count > 0) {
       console.log(`📊 Scraping failed, using cached count: ${cachedData.count} from ${cachedData.timestamp}`)
       finalHolderCount = cachedData.count

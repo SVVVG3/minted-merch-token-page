@@ -17,7 +17,7 @@ interface TokenData {
 interface TokenDataApiResponse {
   holders?: number
   error?: string
-  source: 'blockchain-rpc' | 'fallback'
+  source: 'live-update' | 'fallback'
   lastUpdated: string
 }
 

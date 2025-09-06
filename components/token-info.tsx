@@ -135,12 +135,22 @@ export function TokenInfo() {
             console.log('🔍 Fetching holder count...')
             const holderCount = await withTimeout(fetchHolderCount(), 15000) // 15 second timeout
             
-            if (holderCount && holderCount !== 1053) { // Only update if we got new data
-              console.log('📊 Updating holder count:', holderCount)
-              setTokenData(prevData => ({ ...prevData, holders: holderCount }))
+            console.log('🔍 Raw holder count result:', holderCount, 'type:', typeof holderCount)
+            
+            if (holderCount && typeof holderCount === 'number' && holderCount > 0) {
+              console.log('📊 Updating holder count from API:', holderCount)
+              setTokenData(prevData => {
+                console.log('📊 Previous data:', prevData)
+                const newData = { ...prevData, holders: holderCount }
+                console.log('📊 New data:', newData)
+                return newData
+              })
+            } else {
+              console.log('⚠️ Invalid holder count from API:', holderCount, 'keeping fallback 1053')
             }
           } catch (error) {
             console.error('❌ Holder count fetch error:', error)
+            console.error('❌ Error details:', error instanceof Error ? error.message : 'Unknown error')
             // Keep the fallback value (1053) that was set initially
           }
         }

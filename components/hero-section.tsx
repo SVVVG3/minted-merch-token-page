@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { openExternalUrl, openShopUrl, buyToken, openCommunityUrl } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
+import { useHolderCount } from "@/hooks/use-holder-count"
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const { formattedHolderCount, isLoading } = useHolderCount()
   
   const carouselImages = [
     {
@@ -67,7 +69,9 @@ export function HeroSection() {
                 <div className="text-sm text-muted-foreground">Community Members</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">1K+</div>
+                <div className="text-2xl font-bold text-primary">
+                  {isLoading ? "1.4K+" : formattedHolderCount}
+                </div>
                 <div className="text-sm text-muted-foreground">Token Holders</div>
               </div>
               <div className="text-center">

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Copy, ExternalLink, TrendingUp, Users, Zap, DollarSign, UserCheck, BarChart3, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 import { openExternalUrl } from "@/lib/farcaster-utils"
+import { useHolderCount } from "@/hooks/use-holder-count"
 
 interface TokenData {
   priceUsd?: string
   priceChange24h?: number
   marketCap?: number
-  holders?: number
   liquidity?: number
 }
 
@@ -26,6 +26,7 @@ export function TokenInfo() {
   const [tokenData, setTokenData] = useState<TokenData | null>(null)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
+  const { holderCount } = useHolderCount() // Use shared holder count
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(contractAddress)
@@ -33,38 +34,6 @@ export function TokenInfo() {
     setTimeout(() => setCopied(false), 2000) // Reset after 2 seconds
   }
 
-  const fetchHolderCount = async (): Promise<number | undefined> => {
-    try {
-      console.log('🔍 Fetching holder count from server-side API...')
-      
-      // Use our server-side API route to avoid CORS issues
-      // Add cache-busting parameter to ensure fresh data
-      const cacheBuster = Date.now()
-      const response = await fetch(`/api/token-data?t=${cacheBuster}`, {
-        cache: 'no-store'
-      })
-      
-      if (!response.ok) {
-        console.error(`❌ Token data API HTTP error: ${response.status}`)
-        return 1053 // Updated fallback based on current Basescan count
-      }
-      
-      const data = await response.json()
-      console.log('📊 Token data API response:', data)
-      
-      if (data.holders && typeof data.holders === 'number') {
-        console.log(`✅ Fetched ${data.holders} holders from ${data.source} (updated: ${data.lastUpdated})`)
-        return data.holders
-      } else {
-        console.error('❌ Token data API returned invalid data:', data)
-        return 1053 // Updated fallback
-      }
-      
-    } catch (error) {
-      console.error('❌ Error fetching holder count from API:', error)
-      return 1053 // Updated fallback based on current Basescan count
-    }
-  }
 
   useEffect(() => {
     const fetchTokenData = async () => {
@@ -74,7 +43,6 @@ export function TokenInfo() {
         
         // Set initial data with fallback values to show something immediately
         setTokenData({
-          holders: 1053, // Known fallback
           priceUsd: undefined,
           priceChange24h: undefined,
           marketCap: undefined,
@@ -129,34 +97,8 @@ export function TokenInfo() {
           }
         }
         
-        // Fetch holder count (slower, may take time or fail)
-        const fetchHolderData = async () => {
-          try {
-            console.log('🔍 Fetching holder count...')
-            const holderCount = await withTimeout(fetchHolderCount(), 15000) // 15 second timeout
-            
-            console.log('🔍 Raw holder count result:', holderCount, 'type:', typeof holderCount)
-            
-            if (holderCount && typeof holderCount === 'number' && holderCount > 0) {
-              console.log('📊 Updating holder count from API:', holderCount)
-              setTokenData(prevData => {
-                console.log('📊 Previous data:', prevData)
-                const newData = { ...prevData, holders: holderCount }
-                console.log('📊 New data:', newData)
-                return newData
-              })
-            } else {
-              console.log('⚠️ Invalid holder count from API:', holderCount, 'keeping fallback 1053')
-            }
-          } catch (error) {
-            console.error('❌ Holder count fetch error:', error)
-            console.error('❌ Error details:', error instanceof Error ? error.message : 'Unknown error')
-            // Keep the fallback value (1053) that was set initially
-          }
-        }
-        
-        // Run both API calls in parallel
-        await Promise.allSettled([fetchDexData(), fetchHolderData()])
+        // Run Dexscreener API call
+        await fetchDexData()
         
         console.log('🏁 All API calls completed')
         
@@ -164,7 +106,6 @@ export function TokenInfo() {
         console.error('❌ Error in fetchTokenData:', error)
         // Ensure we always have some data showing
         setTokenData({
-          holders: 1053,
           priceUsd: undefined,
           priceChange24h: undefined,
           marketCap: undefined,
@@ -479,21 +420,12 @@ export function TokenInfo() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {loading ? (
-                <div className="text-2xl font-bold text-primary">Loading...</div>
-              ) : tokenData && tokenData.holders ? (
-                <>
-                  <div className="text-2xl font-bold text-primary">
-                    {tokenData.holders.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Total Holders</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl font-bold text-primary">1,247</div>
-                  <div className="text-sm text-muted-foreground">Total Holders</div>
-                </>
-              )}
+              <>
+                <div className="text-2xl font-bold text-primary">
+                  {holderCount.toLocaleString()}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Holders</div>
+              </>
             </CardContent>
           </Card>
         </div>

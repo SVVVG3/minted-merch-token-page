@@ -109,7 +109,7 @@ export async function GET() {
     // If all methods fail, use the known accurate count
     if (!holderCount) {
       console.log('📊 All scraping methods failed, using known accurate count')
-      holderCount = 1053 // Known accurate count from manual verification
+      holderCount = 1410 // Updated fallback count
     }
     
     // Helper function to extract holder count from HTML
@@ -154,7 +154,7 @@ export async function GET() {
     
     // Fallback to known accurate count
     console.log('📊 Using fallback holder count')
-    let holderCount = 1053 // Most recent accurate count
+    let holderCount = 1410 // Updated fallback count
     
     const fallbackResponse = NextResponse.json({
       holders: holderCount,

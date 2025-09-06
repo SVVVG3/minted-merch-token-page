@@ -32,13 +32,22 @@ export async function GET() {
       console.log('🧪 [TEST] HTML length:', html.length)
       console.log('🧪 [TEST] HTML sample (first 1000 chars):', html.substring(0, 1000))
       
-      // Test extraction patterns
+      // Test extraction patterns (same as main API)
       const patterns = [
-        /Holders?[:\s]*([0-9,]+)/i,
+        // Pattern for "Holders: 1,416" format (most common)
+        /Holders?:\s*([0-9,]+)/i,
+        // Pattern for "1,416 Holders" format  
         /([0-9,]+)\s*Holders?/i,
+        // Pattern for JSON-like "holders": "1,416"
         /"holders?"[:\s]*"?([0-9,]+)"?/i,
+        // Pattern for "holder" followed by number
         /holder[s]?[^0-9]*([0-9,]+)/i,
-        /holders['":\s]*([0-9,]+)/i
+        // Pattern for various separators
+        /holders?['":\s]*([0-9,]+)/i,
+        // Pattern specifically for the format we saw: "Holders: 1,416"
+        /Holders:\s*([0-9,]+)/i,
+        // More flexible pattern for any "holders" text followed by number
+        /holders?[^\d]*([0-9,]+)/i
       ]
       
       for (let i = 0; i < patterns.length; i++) {

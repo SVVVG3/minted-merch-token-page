@@ -70,7 +70,11 @@ export function HeroSection() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">
-                  {isLoading ? "1.4K+" : formattedHolderCount}
+                  {isLoading || !formattedHolderCount ? (
+                    <div className="animate-pulse bg-muted rounded h-8 w-16 mx-auto"></div>
+                  ) : (
+                    formattedHolderCount
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">Token Holders</div>
               </div>

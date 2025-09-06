@@ -10,8 +10,8 @@ interface TokenDataApiResponse {
 }
 
 interface HolderCountContextType {
-  holderCount: number
-  formattedHolderCount: string
+  holderCount: number | null
+  formattedHolderCount: string | null
   isLoading: boolean
   source: 'web-scraper' | 'cached' | 'fallback'
 }
@@ -20,7 +20,7 @@ const HolderCountContext = createContext<HolderCountContextType | undefined>(und
 
 export function HolderCountProvider({ children }: { children: ReactNode }) {
   console.log('🏗️ [CONTEXT] HolderCountProvider initialized')
-  const [holderCount, setHolderCount] = useState<number>(1427) // Updated to match bootstrap cache
+  const [holderCount, setHolderCount] = useState<number | null>(null) // Start with null to show loading
   const [isLoading, setIsLoading] = useState(true)
   const [source, setSource] = useState<'web-scraper' | 'cached' | 'fallback'>('fallback')
 
@@ -115,7 +115,9 @@ export function HolderCountProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Format holder count for display (round to nearest hundred, show as K+)
-  const formatHolderCount = (count: number): string => {
+  const formatHolderCount = (count: number | null): string | null => {
+    if (count === null) return null
+    
     if (count < 1000) {
       return `${count}`
     }

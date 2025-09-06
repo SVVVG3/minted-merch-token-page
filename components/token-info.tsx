@@ -422,7 +422,11 @@ export function TokenInfo() {
             <CardContent>
               <>
                 <div className="text-2xl font-bold text-primary">
-                  {holderCount.toLocaleString()}
+                  {holderCount === null ? (
+                    <div className="animate-pulse bg-muted rounded h-8 w-20"></div>
+                  ) : (
+                    holderCount.toLocaleString()
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Holders</div>
               </>

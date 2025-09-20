@@ -14,8 +14,7 @@ export function Footer() {
               <img src="/mintedmerch-logo.png" alt="$mintedmerch logo" className="w-48 h-12 object-cover" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-              Connecting onchain communities<br />
-              with merch that fuels growth.
+              Where Tokens Meet Merch
             </p>
             
             <div className="space-y-4 mt-4">

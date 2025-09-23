@@ -225,9 +225,9 @@ export async function buyToken(): Promise<void> {
     }
   }
   
-  // Fallback to Uniswap for non-Mini App contexts or if swapToken fails
-  window.open('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base', '_blank', 'noopener,noreferrer')
-  console.log('✅ Opened Uniswap via window.open (regular web)')
+  // Fallback to Matcha for non-Mini App contexts or if swapToken fails
+  window.open('https://matcha.xyz/tokens/base/0x774eaefe73df7959496ac92a77279a8d7d690b07', '_blank', 'noopener,noreferrer')
+  console.log('✅ Opened Matcha via window.open (regular web)')
 }
 
 /**

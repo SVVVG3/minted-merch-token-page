@@ -56,7 +56,7 @@ export function HeroSection() {
                 Shop Merch
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => buyToken()}>
-                <img src="/UniswapLogo.png" alt="Uniswap" className="h-5 w-5" /> Buy $mintedmerch
+                <img src="/MatchaLogo.png" alt="Matcha" className="h-5 w-5" /> Buy $mintedmerch
               </Button>
               <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openCommunityUrl()}>
                 Join Our Community

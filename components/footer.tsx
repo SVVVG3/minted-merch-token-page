@@ -54,7 +54,7 @@ export function Footer() {
                 className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
                 onClick={() => buyToken()}
               >
-                <img src="/UniswapLogo.png" alt="Uniswap" className="h-3 w-3 mr-1" />
+                <img src="/MatchaLogo.png" alt="Matcha" className="h-3 w-3 mr-1" />
                 Buy $mintedmerch
               </Button>
               <Button

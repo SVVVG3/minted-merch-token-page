@@ -275,8 +275,8 @@ export function TokenInfo() {
                 </Button>
               </div>
               <div className="flex justify-center gap-2 flex-wrap">
-                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://app.uniswap.org/swap?outputCurrency=0x774EAeFE73Df7959496Ac92a77279A8D7d690b07&chain=base')}>
-                  <img src="/UniswapLogo.png" alt="Uniswap" className="h-4 w-4 md:h-8 md:w-8" />
+                <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://matcha.xyz/tokens/base/0x774eaefe73df7959496ac92a77279a8d7d690b07')}>
+                  <img src="/MatchaLogo.png" alt="Matcha" className="h-4 w-4 md:h-8 md:w-8" />
                 </Button>
                 <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl(`https://basescan.org/address/${contractAddress}`)}>
                   <img src="/BasescanLogoWhiteAndBlue.png" alt="Basescan" className="h-4 w-4 md:h-8 md:w-8" />

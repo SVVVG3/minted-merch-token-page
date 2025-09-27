@@ -433,6 +433,18 @@ export function TokenInfo() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Tokenomics Section */}
+        <div className="mt-12 text-center">
+          <h3 className="text-2xl font-bold mb-6 text-foreground">Tokenomics</h3>
+          <div className="flex justify-center">
+            <img 
+              src="/mintedmerch-tokenomics.png" 
+              alt="$mintedmerch Tokenomics" 
+              className="max-w-full h-auto rounded-lg border border-border shadow-lg"
+            />
+          </div>
+        </div>
       </div>
     </section>
   )

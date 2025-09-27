@@ -436,7 +436,6 @@ export function TokenInfo() {
 
         {/* Tokenomics Section */}
         <div className="mt-12 text-center">
-          <h3 className="text-2xl font-bold mb-6 text-foreground">Tokenomics</h3>
           <div className="flex justify-center">
             <img 
               src="/mintedmerch-tokenomics.png" 

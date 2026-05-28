@@ -450,6 +450,126 @@ export function TokenInfo() {
             />
           </div>
         </div>
+
+        {/* Wallet Addresses Section */}
+        <div className="mt-12">
+          <h3 className="text-2xl font-bold text-center mb-8">Token Distribution Addresses</h3>
+          <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Staking Contract
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0x38AE5d952FA83eD57c5b5dE59b6e36Ce975a9150"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0x38AE5d952FA83eD57c5b5dE59b6e36Ce975a9150
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Operations (mintedmerch.eth)
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0xEDb90eF78C78681eE504b9E00950d84443a3E86B"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0xEDb90eF78C78681eE504b9E00950d84443a3E86B
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Community Vault 1
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0x11568faA781f577c05763F86Da03eFd85a36EB29"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0x11568faA781f577c05763F86Da03eFd85a36EB29
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Community Vault 2
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0x11f2ae4DD9575833D42d03662dA113Cd3c3D4176"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0x11f2ae4DD9575833D42d03662dA113Cd3c3D4176
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Community Vault 3
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0x57F7fd7C4c10B3582de565081f779ff0347f113e"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0x57F7fd7C4c10B3582de565081f779ff0347f113e
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-primary/50 transition-colors">
+              <CardContent className="pt-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4" />
+                    Ecosystem Growth Vault
+                  </h4>
+                  <a 
+                    href="https://basescan.org/address/0xb6BE309eb1697B6D061B380b0952df8aCFf6b394"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-muted-foreground hover:text-primary transition-colors block break-all"
+                  >
+                    0xb6BE309eb1697B6D061B380b0952df8aCFf6b394
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </section>
   )

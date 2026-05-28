@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { openExternalUrl, openShopUrl, buyToken, openCommunityUrl } from "@/lib/farcaster-utils"
+import { openExternalUrl, openShopUrl, buyToken, openDiscordUrl, stakeToken } from "@/lib/farcaster-utils"
 import { useState, useEffect } from "react"
 import { useHolderCount } from "@/contexts/holder-count-context"
 
@@ -58,16 +58,15 @@ export function HeroSection() {
               <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent flex items-center gap-2" onClick={() => buyToken()}>
                 <img src="/MatchaLogo.png" alt="Matcha" className="h-5 w-5" /> Buy $mintedmerch
               </Button>
-              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openCommunityUrl()}>
-                Join Our Community
+              <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent" onClick={() => stakeToken()}>
+                Stake $mintedmerch
+              </Button>
+              <Button variant="secondary" size="lg" className="text-lg px-8" onClick={() => openDiscordUrl()}>
+                Join Our Discord
               </Button>
             </div>
 
             <div className="flex items-center space-x-8 pt-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">5K+</div>
-                <div className="text-sm text-muted-foreground">Community Members</div>
-              </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">
                   {isLoading || !formattedHolderCount ? (
@@ -77,6 +76,10 @@ export function HeroSection() {
                   )}
                 </div>
                 <div className="text-sm text-muted-foreground">Token Holders</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">5K+</div>
+                <div className="text-sm text-muted-foreground">Community Members</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary">3+ <span className="text-primary">Years</span></div>

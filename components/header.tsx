@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Share2 } from "lucide-react"
-import { openExternalUrl, openShopUrl, openMiniAppUrl, buyToken } from "@/lib/farcaster-utils"
+import { openExternalUrl, openShopUrl, openMiniAppUrl, buyToken, stakeToken } from "@/lib/farcaster-utils"
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -143,6 +143,9 @@ export function Header() {
             <Button size="sm" onClick={() => buyToken()}>
               Buy $mintedmerch
             </Button>
+            <Button variant="secondary" size="sm" onClick={() => stakeToken()}>
+              Stake
+            </Button>
           </div>
 
           {/* Mobile Share Button and Menu Button */}
@@ -185,6 +188,9 @@ export function Header() {
                 </Button>
                 <Button size="sm" className="w-full" onClick={() => buyToken()}>
                   Buy $mintedmerch
+                </Button>
+                <Button variant="secondary" size="sm" className="w-full" onClick={() => stakeToken()}>
+                  Stake $mintedmerch
                 </Button>
               </div>
             </nav>

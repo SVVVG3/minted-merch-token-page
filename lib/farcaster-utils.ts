@@ -276,3 +276,27 @@ export async function openDiscordUrl(): Promise<void> {
   window.open(discordUrl, '_blank', 'noopener,noreferrer')
   console.log('✅ Opened Discord via window.open (regular web)')
 }
+
+/**
+ * Opens Stake URL - works in both Mini App and regular web contexts
+ */
+export async function stakeToken(): Promise<void> {
+  const stakeUrl = 'https://app.mintedmerch.shop/stake'
+  const isMiniApp = await isFarcasterContext()
+  
+  if (isMiniApp) {
+    try {
+      // In Mini App context, use SDK openUrl
+      const { sdk } = await import('@farcaster/miniapp-sdk')
+      await sdk.actions.openUrl(stakeUrl)
+      console.log('✅ Opened staking via SDK (Mini App)')
+      return
+    } catch (error) {
+      console.warn('❌ Failed to use Farcaster SDK for staking URL, falling back to window.open:', error)
+    }
+  }
+  
+  // Fallback to window.open for non-Mini App contexts or if SDK fails
+  window.open(stakeUrl, '_blank', 'noopener,noreferrer')
+  console.log('✅ Opened staking via window.open (regular web)')
+}

@@ -453,7 +453,6 @@ export function TokenInfo() {
 
         {/* Wallet Addresses Section */}
         <div className="mt-12">
-          <h3 className="text-2xl font-bold text-center mb-8">Token Distribution Addresses</h3>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             <a 
               href="https://basescan.org/address/0x38AE5d952FA83eD57c5b5dE59b6e36Ce975a9150"

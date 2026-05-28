@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Copy, ExternalLink, TrendingUp, Users, Zap, DollarSign, UserCheck, BarChart3, Check } from "lucide-react"
 import { useState, useEffect } from "react"
-import { openExternalUrl } from "@/lib/farcaster-utils"
+import { openExternalUrl, stakeToken } from "@/lib/farcaster-utils"
 import { useHolderCount } from "@/contexts/holder-count-context"
 
 interface TokenData {
@@ -306,6 +306,9 @@ export function TokenInfo() {
                   ) : (
                     <Copy className="h-4 w-4" />
                   )}
+                </Button>
+                <Button size="sm" variant="default" onClick={() => stakeToken()} className="shrink-0">
+                  Stake
                 </Button>
               </div>
               <div className="flex gap-2">

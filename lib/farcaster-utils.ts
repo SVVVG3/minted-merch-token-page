@@ -279,24 +279,36 @@ export async function openDiscordUrl(): Promise<void> {
 
 /**
  * Opens Stake URL - works in both Mini App and regular web contexts
+ * In Mini App: opens Minted Merch Mini App
+ * In web: opens app.mintedmerch.shop/stake
  */
 export async function stakeToken(): Promise<void> {
-  const stakeUrl = 'https://app.mintedmerch.shop/stake'
   const isMiniApp = await isFarcasterContext()
   
   if (isMiniApp) {
     try {
-      // In Mini App context, use SDK openUrl
+      // In Mini App context, use openMiniApp to navigate to the shop Mini App
       const { sdk } = await import('@farcaster/miniapp-sdk')
-      await sdk.actions.openUrl(stakeUrl)
-      console.log('✅ Opened staking via SDK (Mini App)')
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch'
+      })
+      console.log('✅ Opened Minted Merch Mini App for staking via SDK')
       return
     } catch (error) {
-      console.warn('❌ Failed to use Farcaster SDK for staking URL, falling back to window.open:', error)
+      console.warn('❌ Failed to use openMiniApp for staking, trying openUrl fallback:', error)
+      try {
+        // Fallback to openUrl if openMiniApp fails
+        const { sdk } = await import('@farcaster/miniapp-sdk')
+        await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch')
+        console.log('✅ Opened staking via openUrl fallback (Mini App)')
+        return
+      } catch (urlError) {
+        console.warn('❌ Both SDK methods failed, falling back to external URL:', urlError)
+      }
     }
   }
   
-  // Fallback to window.open for non-Mini App contexts or if SDK fails
-  window.open(stakeUrl, '_blank', 'noopener,noreferrer')
+  // Fallback to regular staking app for non-Mini App contexts or if SDK fails
+  window.open('https://app.mintedmerch.shop/stake', '_blank', 'noopener,noreferrer')
   console.log('✅ Opened staking via window.open (regular web)')
 }

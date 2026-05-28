@@ -51,7 +51,7 @@ export function HeroSection() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Button size="lg" className="text-lg px-8" onClick={() => openShopUrl()}>
                 Shop Merch
               </Button>

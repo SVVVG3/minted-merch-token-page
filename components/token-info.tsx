@@ -212,7 +212,13 @@ export function TokenInfo() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground font-medium">Stake 50M $mintedmerch</p>
+                <Button 
+                  onClick={() => stakeToken()} 
+                  variant="outline" 
+                  className="w-full"
+                >
+                  Stake 50M $mintedmerch
+                </Button>
                 <ul className="space-y-2 text-sm">
                   <li>• Access to collab partnerships</li>
                   <li>• Ability to create & order custom merch</li>

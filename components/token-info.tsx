@@ -486,7 +486,7 @@ export function TokenInfo() {
                   <div className="space-y-2">
                     <h4 className="font-semibold text-primary flex items-center gap-2">
                       <ExternalLink className="h-4 w-4" />
-                      Operations (mintedmerch.eth)
+                      mintedmerch.eth
                     </h4>
                     <p className="text-sm font-mono text-muted-foreground">
                       0xEDb9...E86B

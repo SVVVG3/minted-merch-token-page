@@ -278,26 +278,37 @@ export async function openDiscordUrl(): Promise<void> {
 }
 
 /**
- * Opens Stake URL - works in both Mini App and regular web contexts
- * Uses openUrl to open the staking page directly in both contexts
+ * Opens Stake page - works in both Mini App and regular web contexts
+ * Mini App: Opens stake page within Minted Merch Mini App (stays in Farcaster)
+ * Web: Opens app.mintedmerch.shop/stake
  */
 export async function stakeToken(): Promise<void> {
-  const stakeUrl = 'https://app.mintedmerch.shop/stake'
   const isMiniApp = await isFarcasterContext()
   
   if (isMiniApp) {
     try {
-      // In Mini App context, use SDK openUrl to open staking page
+      // In Mini App context, use openMiniApp to open stake page within the Mini App
       const { sdk } = await import('@farcaster/miniapp-sdk')
-      await sdk.actions.openUrl(stakeUrl)
-      console.log('✅ Opened staking page via SDK openUrl (Mini App)')
+      await sdk.actions.openMiniApp({
+        url: 'https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch/stake'
+      })
+      console.log('✅ Opened stake page within Minted Merch Mini App via sdk.actions.openMiniApp()')
       return
     } catch (error) {
-      console.warn('❌ Failed to use SDK openUrl for staking, falling back to window.open:', error)
+      console.warn('❌ Failed to use openMiniApp for staking, trying openUrl fallback:', error)
+      try {
+        // Fallback to openUrl if openMiniApp fails
+        const { sdk } = await import('@farcaster/miniapp-sdk')
+        await sdk.actions.openUrl('https://farcaster.xyz/miniapps/1rQnrU1XOZie/minted-merch/stake')
+        console.log('✅ Opened stake page via openUrl fallback (Mini App)')
+        return
+      } catch (urlError) {
+        console.warn('❌ Both openMiniApp and openUrl failed, falling back to external URL:', urlError)
+      }
     }
   }
   
-  // Fallback to window.open for non-Mini App contexts or if SDK fails
-  window.open(stakeUrl, '_blank', 'noopener,noreferrer')
+  // Fallback to regular staking app for non-Mini App contexts or if SDK fails
+  window.open('https://app.mintedmerch.shop/stake', '_blank', 'noopener,noreferrer')
   console.log('✅ Opened staking via window.open (regular web)')
 }

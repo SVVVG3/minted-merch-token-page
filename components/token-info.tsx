@@ -214,7 +214,7 @@ export function TokenInfo() {
               <div className="space-y-3">
                 <Button 
                   onClick={() => stakeToken()} 
-                  variant="outline" 
+                  variant="default" 
                   className="w-full"
                 >
                   Stake 50M $mintedmerch

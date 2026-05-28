@@ -212,12 +212,12 @@ export function TokenInfo() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground font-medium">Hold 50M $mintedmerch</p>
+                <p className="text-sm text-muted-foreground font-medium">Stake 50M $mintedmerch</p>
                 <ul className="space-y-2 text-sm">
                   <li>• Access to collab partnerships</li>
                   <li>• Ability to create & order custom merch</li>
                   <li>• Access to the Merch Moguls chat</li>
-                  <li>• 15% off store wide as long as you hold</li>
+                  <li>• 15% off store wide as long as you stake</li>
                 </ul>
               </div>
             </CardContent>

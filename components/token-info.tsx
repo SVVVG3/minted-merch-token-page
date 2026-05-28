@@ -273,6 +273,9 @@ export function TokenInfo() {
                     <Copy className="h-4 w-4" />
                   )}
                 </Button>
+                <Button size="sm" variant="default" onClick={() => stakeToken()} className="shrink-0">
+                  Stake
+                </Button>
               </div>
               <div className="flex justify-center gap-2 flex-wrap">
                 <Button size="sm" variant="outline" className="hover:bg-primary hover:border-primary transition-colors" onClick={() => openExternalUrl('https://matcha.xyz/tokens/base/0x774eaefe73df7959496ac92a77279a8d7d690b07')}>

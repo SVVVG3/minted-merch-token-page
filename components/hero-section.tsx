@@ -89,7 +89,7 @@ export function HeroSection() {
           </div>
 
           <div className="relative flex justify-center lg:justify-end">
-            <div className="w-80 max-w-full lg:w-[59%] aspect-square bg-card rounded-2xl p-8 border border-border relative overflow-hidden">
+            <div className="w-80 max-w-full lg:w-[75%] aspect-square bg-card rounded-2xl p-8 border border-border relative overflow-hidden">
               <img
                 src={carouselImages[currentImageIndex].src}
                 alt={carouselImages[currentImageIndex].alt}

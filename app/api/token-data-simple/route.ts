@@ -107,8 +107,8 @@ export async function GET() {
     // Bootstrap with a reasonable cached value if nothing exists
     if (!cachedData) {
       cachedData = {
-        count: 1427,
-        timestamp: '2025-09-06T05:16:00.000Z',
+        count: 29449,
+        timestamp: '2026-05-28T22:00:00.000Z',
         source: 'web-scraper'
       }
       console.log(`🚀 Bootstrap cache: ${cachedData.count}`)
@@ -123,42 +123,56 @@ export async function GET() {
       console.log(`⏰ Rate limited (${Math.round((MIN_SCRAPE_INTERVAL - timeSinceLastScrape) / 1000)}s remaining), using cache`)
     }
     
-    // Try multiple scraping methods for better reliability
+    // Try to get holder count using Basescan API
     let holderCount: number | null = null
     
-    // Only scrape if rate limit allows or no cache available
+    // Only fetch if rate limit allows or no cache available
     if (shouldScrape || !cachedData) {
       lastScrapeTime = now // Update last scrape time
       
-      // Method 1: Try ScrapingBee (free tier available)
-      try {
-        console.log('🐝 Method 1: ScrapingBee proxy...')
-        
-        const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=free&url=${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}&render_js=false&premium_proxy=false`
-        
-        const response = await fetch(scrapingBeeUrl, {
-          cache: 'no-store',
-          signal: AbortSignal.timeout(15000)
-        })
-        
-        console.log(`📊 ScrapingBee response: ${response.status}`)
-        
-        if (response.ok) {
-          const html = await response.text()
-          console.log(`📄 HTML length: ${html.length}`)
-          holderCount = extractHolderCount(html)
-          if (holderCount) {
-            console.log(`✅ Method 1 success: ${holderCount}`)
+      // Method 1: Use official Basescan API (Base chain)
+      const apiKey = process.env.BASESCAN_API_KEY
+      if (apiKey) {
+        try {
+          console.log('🔑 Method 1: Using Basescan API with key...')
+          
+          // Base chain uses api.basescan.org
+          // https://docs.basescan.org/api-endpoints/stats#get-total-supply-by-contractaddress
+          const apiUrl = `https://api.basescan.org/api?module=stats&action=tokenholdercount&contractaddress=${contractAddress}&apikey=${apiKey}`
+          
+          const response = await fetch(apiUrl, {
+            cache: 'no-store',
+            signal: AbortSignal.timeout(10000)
+          })
+          
+          console.log(`📊 Basescan API response: ${response.status}`)
+          
+          if (response.ok) {
+            const data = await response.json()
+            console.log(`📄 Basescan API data:`, data)
+            
+            if (data.status === '1' && data.result) {
+              // API returns holder count as string
+              const count = parseInt(data.result, 10)
+              if (!isNaN(count) && count > 0) {
+                holderCount = count
+                console.log(`✅ Method 1 success: ${holderCount}`)
+              }
+            } else {
+              console.log(`⚠️ Basescan API returned error: ${data.message || 'Unknown error'}`)
+            }
           }
+        } catch (error) {
+          console.log('⚠️ Method 1 failed:', error)
         }
-      } catch (error) {
-        console.log('⚠️ Method 1 failed:', error)
+      } else {
+        console.log('⚠️ BASESCAN_API_KEY not configured, skipping API method')
       }
       
-      // Method 2: Try different proxy service
+      // Method 2: Fallback to web scraping if API fails
       if (!holderCount) {
         try {
-          console.log('🌐 Method 2: Alternative proxy...')
+          console.log('🌐 Method 2: Fallback web scraping...')
           
           const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}`
           
@@ -182,33 +196,6 @@ export async function GET() {
           }
         } catch (error) {
           console.log('⚠️ Method 2 failed:', error)
-        }
-      }
-      
-      // Method 3: Try Puppeteer-based service (if others fail)
-      if (!holderCount) {
-        try {
-          console.log('🎭 Method 3: Browser-based scraping...')
-          
-          const browserUrl = `https://api.scraperapi.com/?api_key=demo&url=${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}&render=true`
-          
-          const browserResponse = await fetch(browserUrl, {
-            cache: 'no-store',
-            signal: AbortSignal.timeout(20000)
-          })
-          
-          console.log(`📊 Browser response: ${browserResponse.status}`)
-          
-          if (browserResponse.ok) {
-            const html = await browserResponse.text()
-            console.log(`📄 Browser HTML length: ${html.length}`)
-            holderCount = extractHolderCount(html)
-            if (holderCount) {
-              console.log(`✅ Method 3 success: ${holderCount}`)
-            }
-          }
-        } catch (error) {
-          console.log('⚠️ Method 3 failed:', error)
         }
       }
     }
@@ -242,7 +229,7 @@ export async function GET() {
       console.log(`💾 Using cached data: ${finalCount} (scraping failed with 403)`)
     } else {
       // Use a more recent fallback based on what we've seen working
-      finalCount = 1427 // Last known good count from earlier successful scrapes
+      finalCount = 29449 // Last known good count from Basescan (2026-05-28)
       source = 'fallback'
       console.log(`📊 Using updated fallback: ${finalCount}`)
     }
@@ -264,7 +251,7 @@ export async function GET() {
     console.error('❌ API Error:', error)
     
     return NextResponse.json({
-      holders: 1410,
+      holders: 29449,
       error: error instanceof Error ? error.message : 'Unknown error',
       source: 'fallback',
       lastUpdated: new Date().toISOString()

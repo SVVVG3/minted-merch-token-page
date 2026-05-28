@@ -252,3 +252,27 @@ export async function openCommunityUrl(): Promise<void> {
   window.open('https://cura.network/mintedmerch?t=hot', '_blank', 'noopener,noreferrer')
   console.log('✅ Opened Cura community via window.open (regular web)')
 }
+
+/**
+ * Opens Discord URL - works in both Mini App and regular web contexts
+ */
+export async function openDiscordUrl(): Promise<void> {
+  const discordUrl = 'https://discord.gg/2T5meQVfu8'
+  const isMiniApp = await isFarcasterContext()
+  
+  if (isMiniApp) {
+    try {
+      // In Mini App context, use SDK openUrl
+      const { sdk } = await import('@farcaster/miniapp-sdk')
+      await sdk.actions.openUrl(discordUrl)
+      console.log('✅ Opened Discord via SDK (Mini App)')
+      return
+    } catch (error) {
+      console.warn('❌ Failed to use Farcaster SDK for Discord URL, falling back to window.open:', error)
+    }
+  }
+  
+  // Fallback to window.open for non-Mini App contexts or if SDK fails
+  window.open(discordUrl, '_blank', 'noopener,noreferrer')
+  console.log('✅ Opened Discord via window.open (regular web)')
+}

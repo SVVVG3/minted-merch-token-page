@@ -37,92 +37,68 @@ export async function GET() {
     
     let holderCount: number | null = null
     
-    // Method 1: Try a free proxy service to bypass 403 blocks
-    try {
-      console.log('🌐 Trying via free proxy service...')
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}`
-      
-      const proxyResponse = await fetch(proxyUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        },
-        cache: 'no-store',
-        signal: AbortSignal.timeout(8000) // 8 second timeout
-      })
-      
-      if (proxyResponse.ok) {
-        const proxyData = await proxyResponse.json()
-        if (proxyData.contents) {
-          holderCount = extractHolderCount(proxyData.contents)
-          if (holderCount) {
-            console.log(`✅ Successfully got ${holderCount} holders via proxy`)
-          }
-        }
-      }
-    } catch (error) {
-      console.log('⚠️ Proxy method failed:', error)
-    }
-    
-    // Method 2: Try another free proxy service
-    if (!holderCount) {
+    // Method 1: Use official Basescan API (Base chain)
+    const apiKey = process.env.BASESCAN_API_KEY
+    if (apiKey) {
       try {
-        console.log('🌐 Trying alternative proxy service...')
-        const corsProxyUrl = `https://cors-anywhere.herokuapp.com/https://basescan.org/token/${contractAddress}`
+        console.log('🔑 Method 1: Using Basescan API with key...')
         
-        const corsResponse = await fetch(corsProxyUrl, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-            'X-Requested-With': 'XMLHttpRequest'
-          },
+        // Base chain uses api.basescan.org
+        const apiUrl = `https://api.basescan.org/api?module=stats&action=tokenholdercount&contractaddress=${contractAddress}&apikey=${apiKey}`
+        
+        const response = await fetch(apiUrl, {
           cache: 'no-store',
-          signal: AbortSignal.timeout(8000) // 8 second timeout
+          signal: AbortSignal.timeout(10000)
         })
         
-        if (corsResponse.ok) {
-          const html = await corsResponse.text()
-          holderCount = extractHolderCount(html)
-          if (holderCount) {
-            console.log(`✅ Successfully got ${holderCount} holders via CORS proxy`)
-          }
-        }
-      } catch (error) {
-        console.log('⚠️ CORS proxy method failed:', error)
-      }
-    }
-    
-    // Method 3: Try direct fetch with random delays and different approach
-    if (!holderCount) {
-      try {
-        console.log('🔄 Trying direct fetch with stealth headers...')
-        
-        // Small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
-        const response = await fetch(`https://basescan.org/token/${contractAddress}`, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https://google.com/',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
-          },
-          cache: 'no-store',
-          signal: AbortSignal.timeout(8000) // 8 second timeout
-        })
+        console.log(`📊 Basescan API response: ${response.status}`)
         
         if (response.ok) {
-          const html = await response.text()
-          holderCount = extractHolderCount(html)
-          if (holderCount) {
-            console.log(`✅ Successfully got ${holderCount} holders via direct fetch`)
+          const data = await response.json()
+          console.log(`📄 Basescan API data:`, data)
+          
+          if (data.status === '1' && data.result) {
+            const count = parseInt(data.result, 10)
+            if (!isNaN(count) && count > 0) {
+              holderCount = count
+              console.log(`✅ Method 1 success: ${holderCount} holders via Basescan API`)
+            }
+          } else {
+            console.log(`⚠️ Basescan API returned error: ${data.message || 'Unknown error'}`)
           }
-        } else {
-          console.log(`❌ Direct fetch failed: ${response.status} ${response.statusText}`)
         }
       } catch (error) {
-        console.log('⚠️ Direct fetch failed:', error)
+        console.log('⚠️ Method 1 (Basescan API) failed:', error)
+      }
+    } else {
+      console.log('⚠️ BASESCAN_API_KEY not configured, skipping API method')
+    }
+    
+    // Method 2: Fallback to web scraping if API fails
+    if (!holderCount) {
+      try {
+        console.log('🌐 Method 2: Fallback web scraping...')
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://basescan.org/token/${contractAddress}`)}`
+        
+        const proxyResponse = await fetch(proxyUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          },
+          cache: 'no-store',
+          signal: AbortSignal.timeout(8000)
+        })
+        
+        if (proxyResponse.ok) {
+          const proxyData = await proxyResponse.json()
+          if (proxyData.contents) {
+            holderCount = extractHolderCount(proxyData.contents)
+            if (holderCount) {
+              console.log(`✅ Method 2 success: ${holderCount} holders via web scraping`)
+            }
+          }
+        }
+      } catch (error) {
+        console.log('⚠️ Method 2 (web scraping) failed:', error)
       }
     }
     
@@ -194,7 +170,7 @@ export async function GET() {
       source = 'cached'
     } else {
       console.log('📊 No scraping or cached data available, using hardcoded fallback')
-      finalHolderCount = 1410 // Final fallback
+      finalHolderCount = 29449 // Final fallback (Basescan data as of 2026-05-28)
       source = 'fallback'
     }
       
@@ -216,7 +192,7 @@ export async function GET() {
     
     // Fallback to known accurate count
     console.log('📊 Using fallback holder count')
-    let holderCount = 1410 // Updated fallback count
+    let holderCount = 29449 // Updated fallback count (Basescan data as of 2026-05-28)
     
     const fallbackResponse = NextResponse.json({
       holders: holderCount,

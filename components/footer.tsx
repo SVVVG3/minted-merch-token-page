@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ExternalLink } from "lucide-react"
-import { openExternalUrl, openMiniAppUrl, buyToken, openDiscordUrl, stakeToken } from "@/lib/farcaster-utils"
+import { openExternalUrl, openMiniAppUrl, buyToken, openDiscordUrl } from "@/lib/farcaster-utils"
 
 export function Footer() {
   return (
@@ -29,15 +29,18 @@ export function Footer() {
                   <ExternalLink className="h-3 w-3 mr-1" />
                   Join Our Discord
                 </Button>
-                <Button
-                  variant="outline"
-                  size="xs"
-                  className="justify-start bg-transparent px-2 py-1 h-8 text-xs hover:text-primary hover:border-primary transition-colors"
-                  onClick={() => stakeToken()}
-                >
-                  <ExternalLink className="h-3 w-3 mr-1" />
-                  Stake $mintedmerch
-                </Button>
+                <div className="px-2 py-1 text-xs text-foreground/80">
+                  <a 
+                    href="#token" 
+                    className="hover:text-primary transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      document.getElementById('token')?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                  >
+                    Become a Merch Mogul
+                  </a>
+                </div>
               </div>
             </div>
           </div>
